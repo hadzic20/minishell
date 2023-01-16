@@ -1,0 +1,75 @@
+# COLORS
+RESET		=	\033[0m
+GREEN		=	\033[32m
+YELLOW		=	\033[33m
+BLUE		=	\033[34m
+RED			=	\033[31m
+
+D_CMD		=	handle_input.c   get_user_and_path.c   
+D_ERROR		=	error_func.c
+D_BUILTIN	=	builtin/builtin.c   builtin/export.c   builtin/unset_utils.c   builtin/export_utils_one.c   builtin/export_utils_two.c   builtin/unset.c 
+D_UTILS		=	utils/utils_two.c    utils/utils.c
+D_REDIRECT	=	redirect.c
+D_TOKENIZE	=   dollar.c
+D_MINISHELL	=	main.c
+
+
+# COMMAND
+SUCCESS		=	@echo "$(GREEN)Build successfull !$(RESET)"
+REMOVE		=	@echo "$(RED)Deleted !$(RESET)"
+PLUSULTRA	=	@echo "$(YELLOW)!PLUS ULTRA ^^ !$(RESET)"
+
+
+NAME = minishell
+OBJ			=	$(D_CMD:%.c=%.o) \
+				$(D_ERROR:%.c=%.o) \
+				$(D_UTILS:%.c=%.o) \
+				$(D_BUILTIN:%.c=%.o) \
+				$(D_REDIRECT:%.c=%.o) \
+				$(D_TOKENIZE:%.c=%.o) \
+				$(D_MINISHELL:%.c=%.o)
+
+
+CC = @cc
+CFLAGS = -g #-Wall -Wextra -Werror -fsanitize=address -g
+RM = rm -rf
+LIB		= ./lib/.rdl
+READLINE	=	-lreadline
+
+
+all: $(LIB) $(NAME)
+
+
+$(LIB):
+	make -C ./lib
+
+
+$(NAME): $(OBJ)
+	@echo "\n"
+	make -C ./libft
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) ./libft/libft.a $(READLINE)
+	$(SUCCESS)
+	$(PLUSULTRA)
+
+
+
+%.o: %.c
+			@printf "\033[0;30mGenerating minishell objects... %-33.33s\r" $@
+			@${CC} ${CFLAGS} -c $< -o $@
+
+clean:
+	make -C ./libft clean
+	$(RM) */*.o
+	$(RM) *.o
+
+fclean: clean
+	rm -rf libft.a
+	$(RM) $(NAME)
+	$(REMOVE)
+
+ffclean: fclean
+	@make fclean -C lib/
+
+re: fclean all
+
+.PHONY:		all clean fclean re
