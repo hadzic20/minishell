@@ -39,6 +39,9 @@
     "string.h": "c",
     "malloc.h": "c",
     "leak_detector_c.h": "c",
-    "ioctl.h": "c"
+    "ioctl.h": "c",
+    "ios": "c",
+    "ostream": "c",
+    "system_error": "c"
   }
 }

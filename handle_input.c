@@ -171,7 +171,6 @@ char	*double_quote(char *s, int *i)
 	}
 	if (s[*i] != '\0')
 		(*i)++;
-	printf("double quote: %s\n", command);
 	return (command);
 }
 
@@ -196,7 +195,6 @@ char	*quote(char *s, int *i)
 	}
 	if (s[*i] != '\0')
 		(*i)++;
-	//printf("single quote: %s\n", command);
 	return (command);
 }
 
@@ -210,8 +208,11 @@ void ft_exit(char **command)
 	exit(status);
 }
 
-void handle_command(char **command, int fd)
+// Eger bir forkun icindeyse execve yapmadan once kendisi forklamasina
+// gerek yok
+void handle_command(char **command, int fd, bool is_in_fork)
 {
+	g_x->error_code = 0;
 	if (ft_strnstr(command[0], "cd", 2) && command[0][2] == '\0')
 		ft_change_dir(command[1]);
 	else if (ft_strnstr(command[0], "pwd", 3) && command[0][3] == '\0')
@@ -227,64 +228,78 @@ void handle_command(char **command, int fd)
 	else if (ft_strnstr(command[0], "exit", 4) && command[0][4] == '\0')
 		ft_exit(command);
 	else
+	{
+		if (!is_in_fork)
+		{
+			if (fork() != 0)
+				return ;
+		}
 		mini_pathed(command, fd);
+	}
 	free(command[0]);
+}
+
+// Give which command to execute and execute that.
+void handle_command_execution(int i, bool is_in_fork)
+{
+	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
+	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile, is_in_fork);
+}
+
+void handle_line_utils(int i, int save_fd, char *str)
+{
+	if (i != 0)
+	{
+		dup2(save_fd, 0);
+		close(save_fd);
+	}
+	close(g_x->cmds[i].p[0]);
+	if (i != ft_command_count(str) - 1)
+		dup2(g_x->cmds[i].p[1], 1);
+	close(g_x->cmds[i].p[1]);
+	handle_command_execution(i, false);
 }
 
 void handle_line(char *str)
 {
 	int i;
-	//int fd;
 	int save_fd;
-	//char **command;
 	int last_pid;
 	int pid;
 
 	i = -1;
 	seperate_command(str);
-	while (g_x->cmds[++i].raw_command != NULL)
+	if (ft_command_count(str) == 1)
 	{
-    	g_x->cmds[i].outfile = 1;
+		handle_command_execution(0, true);
+		return ;
+	}
+	while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
+	{
+		g_x->cmds[i].outfile = 1;
         pipe(g_x->cmds[i].p);
 		pid = fork();
 		last_pid = pid;
 		if (pid == 0)
 		{
-    		if (ft_strnstr(g_x->cmds[i].raw_command, ">>", ft_strlen(g_x->cmds[i].raw_command)))
-    			g_x->cmds[i].outfile = redirect_output(g_x->cmds[i].raw_command, 1);
-    		else if (ft_strchr(g_x->cmds[i].raw_command, '>'))
-    			g_x->cmds[i].outfile = redirect_output(g_x->cmds[i].raw_command, 0);
-    		if (ft_strchr(g_x->cmds[i].raw_command, '<'))
-    			redirect_input(g_x->cmds[i].raw_command);
-			g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
-			if (i != 0)
-			{
-				dup2(save_fd, 0);
-				close(save_fd);
-			}
-			close(g_x->cmds[i].p[0]);
-			if (i != ft_command_count(str) - 1)
-				dup2(g_x->cmds[i].p[1], 1);
-			close(g_x->cmds[i].p[1]);
-			handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile);
+			redirect(i);
+			handle_line_utils(i, save_fd, str);
 			// Eğer bir builtinse ve hata yoksa buraya kod gelebilir...
-			if (g_x->error_code == 1)
-				exit(2);
-			exit (0);
+			exit(g_x->error_code);
 		}
 		close(g_x->cmds[i].p[1]);
-		if (ft_command_count(str) > 1)
-			save_fd = g_x->cmds[i].p[0];
+		if (i != 0)
+			close(save_fd);
+		save_fd = g_x->cmds[i].p[0];
 	}
+	close(save_fd);
+	
 	int status;
 	status = 0;
 	
 	waitpid(last_pid, &status, 0);
 	// Set ? to WEXITSTATUS(status)
-	if (WEXITSTATUS(status) != 2)
-		g_x->error_code = WEXITSTATUS(status);
-	else
-		g_x->error_code = 1;
+	g_x->error_code = WEXITSTATUS(status);
 	while (waitpid(-1, &status, 0) != -1)
 		;
 	add_history(str);

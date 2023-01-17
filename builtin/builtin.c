@@ -90,9 +90,11 @@ char	*find_path(char *name)
 	return (NULL);
 }
 
+// Bu kesin olarak exitliyor
 void	mini_pathed(char **command, int fd)
 {
 	char	*path;
+	int		pid;
 
 	path = find_path(command[0]);
 	if (path == NULL)
