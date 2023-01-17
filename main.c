@@ -7,7 +7,6 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 
 	g_x = malloc(sizeof(t_x));
-	fill_envp(envp);
 	g_x->export = storage_and_copy(envp);
 	g_x->export = export_sorter(g_x->export);
 	signal(SIGINT, handle_signal);
@@ -25,6 +24,5 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 		}
 	}
-	free_envp();
 	//system("leaks a.out");
 }

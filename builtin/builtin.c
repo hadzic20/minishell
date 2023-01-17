@@ -2,6 +2,7 @@
 
 int	ft_change_dir(char *path)
 {
+	g_x->error_code = 0;
 	if (!path || (path && *path == 0) || !ft_strncmp(path, "~", 1))
 	{
 		if (access(getenv("HOME"), F_OK) != -1)
@@ -19,6 +20,7 @@ int	ft_change_dir(char *path)
 			chdir(path);
 		else
 		{
+			g_x->error_code = 1;
 			print_error("minishell", path, "No such a file or directory");
 			return (0);
 		}
@@ -42,14 +44,13 @@ void	mini_env(int fd)
 	int	env_size;
 
 	i = -1;
-	// TODO: Use g_x->export here
-	env_size = ft_str2len(g_x->envp) - 4;
-	while (++i < env_size)
+	env_size = ft_str2len(g_x->export);
+	while (++i <= env_size)
 	{
-		write(fd, g_x->envp[i], ft_strlen(g_x->envp[i]));
+		write(fd, g_x->export[i], ft_strlen(g_x->export[i]));
 		write(fd, "\n", 1);
 	}
-	write(fd, "_=/usr/bin/env\n", 15);
+	//write(fd, "_=/usr/bin/env\n", 15);
 }
 
 // Memory leakler var
@@ -66,11 +67,11 @@ char	*find_path(char *name)
 	path = ft_strjoin("/", name);
 	i = 0;
 	j = -1;
-	while (++j < ft_str2len(g_x->envp) - 4)
+	while (++j < ft_str2len(g_x->export) - 4)
 	{
-		if (ft_strnstr(g_x->envp[j], "PATH=", 5))
+		if (ft_strnstr(g_x->export[j], "PATH=", 5))
 		{
-			str = ft_substr(g_x->envp[j], 5, ft_strlen(g_x->envp[j]));
+			str = ft_substr(g_x->export[j], 5, ft_strlen(g_x->export[j]));
 			i = 1;
 		}
 	}

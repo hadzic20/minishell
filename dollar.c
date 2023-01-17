@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-char	status_case(char *s, int *i)
+char	*status_case(char *s, int *i)
 {
 	char	*str;
 
 	str = ft_itoa(g_x->error_code);
-	(*i) += ft_strlen(str);
+	(*i)++;
 	return (str);
 }
 
@@ -27,11 +27,11 @@ char	*dollar(char *s, int *i)
 	command[j] = '=';
 	command[j + 1] = '\0';
 	j = -1;
-	while (++j < ft_str2len(g_x->envp) - 4)
+	while (++j < ft_str2len(g_x->export))
 	{
-		if (ft_strnstr(g_x->envp[j], command, ft_strlen(command)))
+		if (ft_strnstr(g_x->export[j], command, ft_strlen(command)))
 		{
-			command = ft_substr(g_x->envp[j], ft_strlen(command), ft_strlen(g_x->envp[j]));
+			command = ft_substr(g_x->export[j], ft_strlen(command), ft_strlen(g_x->export[j]));
 			check = 1;
 		}
 	}

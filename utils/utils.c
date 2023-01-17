@@ -42,30 +42,3 @@ int	ft_str2len(char **str2)
 		i++;
 	return (i);
 }
-
-void	fill_envp(char **envp)
-{
-	int	i;
-
-	i = -1;
-	g_x->envp = malloc((ft_str2len(envp) + 1) * sizeof(char *));
-	while (++i < ft_str2len(envp))
-		g_x->envp[i] = ft_strdup(envp[i]);
-	g_x->envp[i] = ft_strdup("\0");
-}
-
-void	free_envp(void)
-{
-	int	i;
-
-	i = 0;
-	while (g_x->envp && g_x->envp[i])
-	{
-		free(g_x->envp[i]);
-		i++;
-	}
-    //free(g_x->prompt);
-	free(g_x->envp);
-	free(g_x);
-}
-//char **free_envp()

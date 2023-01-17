@@ -8,11 +8,11 @@ char	*get_user(void)
 
 	i = -1;
 	check = 0;
-	while (g_x->envp[++i])
+	while (g_x->export[++i])
 	{
-		if (ft_strnstr(g_x->envp[i], "USER=", 5))
+		if (ft_strnstr(g_x->export[i], "USER=", 5))
 		{
-			user = ft_substr(g_x->envp[i], 5, ft_strlen(g_x->envp[i]));
+			user = ft_substr(g_x->export[i], 5, ft_strlen(g_x->export[i]));
 			check = 1;
 			break ;
 		}
