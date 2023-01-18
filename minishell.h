@@ -45,6 +45,8 @@ typedef struct s_export_vars
 
 extern t_x	*g_x;
 
+bool	ft_isspace(char c);
+bool	is_metachar(char c);
 int		ft_command_count(char *str);
 char	*dollar(char* s, int* i);
 char    *quote(char *s, int *i);

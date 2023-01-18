@@ -14,6 +14,7 @@ int	redirect_output(char *str, int mode)
 {
 	int		i;
 	int		j;
+	int		temp;
 	char	*path;
 	char	current_quote;
 
@@ -37,8 +38,17 @@ int	redirect_output(char *str, int mode)
 	while (str[i] != '\0' && (str[i] == ' ' || str[i] == '\t'))
 		i ++;
 	while (str[i] != '\0' && str[i] != ' ' && str[i] != '\t' && str[i] != '|')
+	{
+		temp = i;
+		if (str[i] == '"')
+			path = ft_strjoin(path, double_quote(str, &i));
+		else if (str[i] == '\'')
+			path = ft_strjoin(path, quote(str, &i));
+		j = j + i - temp;
 		path[j++] = str[i++];
+	}
 	path[j] = '\0';
+	printf("output file is %s\n", path);
 	if (mode == 0)
 		j = open(path, O_CREAT | O_RDWR | O_TRUNC, 0777);
 	if (mode == 1)

@@ -87,6 +87,8 @@ char **extract_command(char *s)
 	char **command;
 
 	j = 0;
+	if (ft_word_count(s) == 0)
+		return (NULL);
 	command = (char **)malloc((ft_word_count(s) + 1) * sizeof(char *));
 	i = -1;
 	while (++i <= ft_word_count(s))
@@ -213,6 +215,8 @@ void ft_exit(char **command)
 void handle_command(char **command, int fd, bool is_in_fork)
 {
 	g_x->error_code = 0;
+	if (command == NULL)
+		return ;
 	if (ft_strnstr(command[0], "cd", 2) && command[0][2] == '\0')
 		ft_change_dir(command[1]);
 	else if (ft_strnstr(command[0], "pwd", 3) && command[0][3] == '\0')
@@ -257,7 +261,7 @@ void handle_line_utils(int i, int save_fd, char *str)
 	if (i != ft_command_count(str) - 1)
 		dup2(g_x->cmds[i].p[1], 1);
 	close(g_x->cmds[i].p[1]);
-	handle_command_execution(i, false);
+	handle_command_execution(i, true);
 }
 
 void handle_line(char *str)
@@ -265,38 +269,36 @@ void handle_line(char *str)
 	int i;
 	int save_fd;
 	int last_pid;
+	int status;
 	int pid;
 
 	i = -1;
 	seperate_command(str);
 	if (ft_command_count(str) == 1)
+		handle_command_execution(0, false);
+	else
 	{
-		handle_command_execution(0, true);
-		return ;
-	}
-	while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
-	{
-		g_x->cmds[i].outfile = 1;
-        pipe(g_x->cmds[i].p);
-		pid = fork();
-		last_pid = pid;
-		if (pid == 0)
+		while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
 		{
-			redirect(i);
-			handle_line_utils(i, save_fd, str);
-			// Eğer bir builtinse ve hata yoksa buraya kod gelebilir...
-			exit(g_x->error_code);
+			g_x->cmds[i].outfile = 1;
+    		pipe(g_x->cmds[i].p);
+			pid = fork();
+			last_pid = pid;
+			if (pid == 0)
+			{
+				redirect(i);
+				handle_line_utils(i, save_fd, str);
+				// Eğer bir builtinse ve hata yoksa buraya kod gelebilir...
+				exit(g_x->error_code);
+			}
+			close(g_x->cmds[i].p[1]);
+			if (i != 0)
+				close(save_fd);
+			save_fd = g_x->cmds[i].p[0];
 		}
-		close(g_x->cmds[i].p[1]);
-		if (i != 0)
-			close(save_fd);
-		save_fd = g_x->cmds[i].p[0];
+		close(save_fd);
 	}
-	close(save_fd);
-	
-	int status;
 	status = 0;
-	
 	waitpid(last_pid, &status, 0);
 	// Set ? to WEXITSTATUS(status)
 	g_x->error_code = WEXITSTATUS(status);

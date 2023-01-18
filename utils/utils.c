@@ -7,6 +7,8 @@ int	ft_word_count(char *str)
 
 	i = 0;
 	size = 0;
+	if (str == NULL)
+		return (0);
 	while (str[i] != '\0')
 	{
 		if (str[i] != ' ' && str[i] != '\t' && \
