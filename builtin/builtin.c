@@ -45,7 +45,7 @@ void	mini_env(int fd)
 
 	i = -1;
 	env_size = ft_str2len(g_x->export);
-	while (++i <= env_size)
+	while (++i < env_size)
 	{
 		write(fd, g_x->export[i], ft_strlen(g_x->export[i]));
 		write(fd, "\n", 1);
