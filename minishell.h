@@ -54,6 +54,7 @@ char    *double_quote(char *s, int *i);
 void	redirect(int i);
 void	redirect_input(char *str);
 int		redirect_output(char *str, int mode);
+void	heredoc(char *str);
 int		ft_change_dir(char *path);
 void	handle_line(char *str);
 void	handle_crtl_d(void);

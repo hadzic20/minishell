@@ -235,7 +235,8 @@ void handle_command(char **command, int fd, bool is_in_fork)
 	{
 		if (!is_in_fork)
 		{
-			if (fork() != 0)
+			g_x->forks = fork();
+			if (g_x->forks != 0)
 				return ;
 		}
 		mini_pathed(command, fd);
@@ -274,8 +275,15 @@ void handle_line(char *str)
 
 	i = -1;
 	seperate_command(str);
+	status = 0;
 	if (ft_command_count(str) == 1)
+	{
+		redirect(0);
 		handle_command_execution(0, false);
+		waitpid(g_x->forks, &status, 0);
+		// Set ? to WEXITSTATUS(status)
+		g_x->error_code = WEXITSTATUS(status);
+	}
 	else
 	{
 		while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
@@ -297,11 +305,11 @@ void handle_line(char *str)
 			save_fd = g_x->cmds[i].p[0];
 		}
 		close(save_fd);
+		status = 0;
+		waitpid(last_pid, &status, 0);
+		// Set ? to WEXITSTATUS(status)
+		g_x->error_code = WEXITSTATUS(status);
 	}
-	status = 0;
-	waitpid(last_pid, &status, 0);
-	// Set ? to WEXITSTATUS(status)
-	g_x->error_code = WEXITSTATUS(status);
 	while (waitpid(-1, &status, 0) != -1)
 		;
 	add_history(str);
