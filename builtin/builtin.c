@@ -1,4 +1,6 @@
 #include "../minishell.h"
+#include <errno.h>
+#include <err.h>
 
 int	ft_change_dir(char *path)
 {
@@ -99,12 +101,12 @@ void	mini_pathed(char **command, int fd)
 	path = find_path(command[0]);
 	if (path == NULL)
 		exit(127);
-	
 	if (fd > 1)
 		dup2(fd, 1);
-	
 	execve(path, command, g_x->export);
 	perror("execve error");
+	if (errno == 13)
+		exit(126);
 	exit(127);
 }
 

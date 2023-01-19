@@ -2,12 +2,12 @@
 
 bool	is_metachar(char c)
 {
-	return (c == '"' ||
-			c == '\'' ||
-			c == '>' ||
-			c == '<' ||
-			c == '|' ||
-			c == '$');
+	return (c == '"'
+		|| c == '\''
+		|| c == '>'
+		|| c == '<'
+		|| c == '|'
+		|| c == '$');
 }
 
 bool	ft_isspace(char c)
@@ -21,9 +21,9 @@ void	skip_spaces(char *s, int *i)
 		(*i)++;
 }
 
+// Redirection skipleme
 void	skip_redirection(char *s, int *i)
 {
-	// Redirection skipleme
 	(*i)++;
 	skip_spaces(s, i);
 	while (s[*i] != '\0' && !ft_isspace(s[*i]) && s[*i] != '|')
@@ -34,35 +34,25 @@ void	skip_redirection(char *s, int *i)
 /* Returns false when sees a redirection so it can be skipped
  *  without increasing j
  */
+// TODO: Memory leakler
 bool	expand_single(char *s, int *i, char **dst)
 {
 	int	k;
 
 	if (s[*i] == '"')
-	{
-		//printf("before join is >%s<\n", *dst);
 		*dst = ft_strjoin(*dst, double_quote(s, i));
-		//printf("after join is >%s<\n", *dst);
-	}
 	else if (s[*i] == '\'')
 		*dst = ft_strjoin(*dst, quote(s, i));
 	else if (s[*i] == '$')
-{
-		//printf("> before join is >%s<\n", *dst);
 		*dst = ft_strjoin(*dst, dollar(s, i));
-		//printf("> after join is >%s<\n", *dst);
-}
-		// Sunu isspace fonksyonu olarak ayir
 	else if (s[*i] == '<' || s[*i] == '>')
 	{
-		// Redirection skiple
 		skip_redirection(s, i);
 		return (false);
 	}
-	// Argumani expand et
 	else
 	{
-		k = 0;
+		k = ft_strlen(*dst);
 		while (s[*i] != '\0' && !is_metachar(s[*i]) && !ft_isspace(s[*i]))
 			(*dst)[k++] = s[(*i)++];
 		(*dst)[k] = '\0';
@@ -160,7 +150,6 @@ char	*double_quote(char *s, int *i)
 		if (s[*i] == '$')
 		{
 			temp = dollar(s, i);
-			printf("> dollar: >%s<\n", temp);
 			command = ft_strjoin(command, temp);
 			j = ft_strlen(command);
 		}
@@ -177,6 +166,7 @@ char	*double_quote(char *s, int *i)
 	return (command);
 }
 
+// MUK
 char	*quote(char *s, int *i)
 {
 	int		j;
@@ -185,7 +175,7 @@ char	*quote(char *s, int *i)
 	j = 0;
 	command = (char *)malloc(ft_strlen(s) * sizeof(char));
 	(*i)++;
-	while (s[*i] != 39)
+	while (s[*i] != '\'')
 	{
 		if (s[*i] == '\0')
 		{
@@ -199,7 +189,7 @@ char	*quote(char *s, int *i)
 	return (command);
 }
 
-void ft_exit(char **command)
+void	ft_exit(char **command)
 {
 	int	status;
 
@@ -251,7 +241,6 @@ void handle_command(char **command, int fd, bool is_in_fork)
 void handle_command_execution(int i, bool is_in_fork)
 {
 	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
-	print_list(g_x->cmds[i].handled_cmd);
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile, is_in_fork);
 }
 

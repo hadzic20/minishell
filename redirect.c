@@ -1,18 +1,87 @@
 #include "minishell.h"
 
-void	redirect(int i)
+// Skips from one quote to end of the other
+void	skip_quote(char *s, int *i)
 {
-	if (ft_strnstr(g_x->cmds[i].raw_command, ">>", ft_strlen(g_x->cmds[i].raw_command)))
-		g_x->cmds[i].outfile = redirect_output(g_x->cmds[i].raw_command, 1);
-    else if (ft_strchr(g_x->cmds[i].raw_command, '>'))
-    	g_x->cmds[i].outfile = redirect_output(g_x->cmds[i].raw_command, 0);
-	if (ft_strnstr(g_x->cmds[i].raw_command, "<<", ft_strlen(g_x->cmds[i].raw_command)))
-		heredoc(g_x->cmds[i].raw_command);
-	else if (ft_strchr(g_x->cmds[i].raw_command, '<'))
-    	redirect_input(g_x->cmds[i].raw_command);
+	char	quote;
+
+	quote = *s;
+	(*i)++;
+	while (*s != quote)
+	{
+		if (*s == '\0')
+			return ;
+		(*i)++;
+	}
+	(*i)++;
 }
 
-int	redirect_output(char *str, int mode)
+// Returns the outfile
+void	redirect(int cmd_index)
+{
+	char	*cmd;
+	int		i;
+
+	printf("> RAW: >%s<\n", cmd);
+	cmd = g_x->cmds[cmd_index].raw_command;
+	i = 0;
+	while (cmd[i] != '\0' && g_x->error_code == 0)
+	{
+		if (cmd[i] == '\"' || cmd[i] == '\'')
+			skip_quote(cmd, &i);
+		if (cmd[i] == '\0')
+			return ;
+		if (cmd[i] == '>' && cmd[i + 1] == '>')
+			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, true);
+		else if (cmd[i] == '>')
+			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, false);
+		i++;
+	}
+}
+
+// ls >ahmet\t
+char	*redirect_path(char *s, int *i)
+{
+	char	*final;
+
+	final = ft_strdup("");
+	while (s[*i] != '\0')
+	{
+		skip_spaces(s, i);
+		if (s[*i] == '\0')
+			return (NULL);
+		if (!expand_single(s, i, &final))
+			continue ;
+		if (ft_isspace(s[*i]) || s[*i] == '\0')
+			break ;
+	}
+	return (final);
+}
+
+int	redirect_output(char *str, int *i, bool is_append)
+{
+	char	*path;
+	int		file;
+
+	if (is_append)
+		(*i) += 2;
+	else
+		(*i) += 1;
+	path = redirect_path(str, i);
+	if (is_append)
+		file = open(path, O_CREAT | O_RDWR | O_TRUNC, 0777);
+	else
+		file = open(path, O_CREAT | O_RDWR | O_APPEND, 0777);
+	if (file == -1)
+	{
+		perror("error opening file");
+		g_x->error_code = 1;
+		return (-1);
+	}
+	return (file);
+}
+
+int	redirect_output_old(char *str, int mode)
 {
 	int		i;
 	int		j;
@@ -36,19 +105,7 @@ int	redirect_output(char *str, int mode)
 		return (1);
 	i++;
 	if (str[i] == '>')
-		i ++;
-	while (str[i] != '\0' && (str[i] == ' ' || str[i] == '\t'))
-		i ++;
-	while (str[i] != '\0' && str[i] != ' ' && str[i] != '\t' && str[i] != '|')
-	{
-		temp = i;
-		if (str[i] == '"')
-			path = ft_strjoin(path, double_quote(str, &i));
-		else if (str[i] == '\'')
-			path = ft_strjoin(path, quote(str, &i));
-		j = j + i - temp;
-		path[j++] = str[i++];
-	}
+		i++;
 	path[j] = '\0';
 	printf("output file is %s\n", path);
 	if (mode == 0)
