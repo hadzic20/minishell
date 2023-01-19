@@ -136,7 +136,6 @@ int	heredoc(char *str, int *i)
 	int		readline_dup;
 	char	*file;
 
-	dprintf(2, "==HEREDOC==\n");
 	(*i) += 2;
 	file = redirect_path(str, i);
 	readline_dup = dup(0);
