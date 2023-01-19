@@ -103,7 +103,7 @@ void	mini_pathed(char **command, int fd)
 	if (fd > 1)
 		dup2(fd, 1);
 	
-	execve(path, command, NULL);
+	execve(path, command, g_x->export);
 	perror("execve error");
 	exit(127);
 }
