@@ -208,19 +208,19 @@ void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 
 	if (command == NULL)
 		return ;
-	if (ft_strnstr(command[0], "cd", sizeof("cd")) && command[0][2] == '\0')
+	if (ft_strnstr(command[0], "cd", sizeof("cd")))
 		ft_change_dir(command[1]);
-	else if (ft_strnstr(command[0], "pwd", 3) && command[0][3] == '\0')
+	else if (ft_strnstr(command[0], "pwd", sizeof("pwd")))
 		mini_pwd(outfd);
-	else if (ft_strnstr(command[0], "env", 3) && command[0][3] == '\0')
+	else if (ft_strnstr(command[0], "env", sizeof("env")))
 		mini_env(outfd);
-	else if (ft_strnstr(command[0], "echo", 4) && command[0][4] == '\0')
+	else if (ft_strnstr(command[0], "echo", sizeof("echo")))
 		mini_echo(command, outfd);
-	else if (ft_strnstr(command[0], "export", 6) && command[0][6] == '\0')
+	else if (ft_strnstr(command[0], "export", sizeof("export")))
 		ft_export(command, outfd);
-	else if (ft_strnstr(command[0], "unset", 5) && command[0][5] == '\0')
+	else if (ft_strnstr(command[0], "unset", sizeof("unset")))
 		ft_unset(command);
-	else if (ft_strnstr(command[0], "exit", 4) && command[0][4] == '\0')
+	else if (ft_strnstr(command[0], "exit", sizeof("exit")))
 		ft_exit(command);
 	else if (!is_in_fork)
 	{
