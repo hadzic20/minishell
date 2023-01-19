@@ -329,5 +329,5 @@ void	handle_signal(int signum)
 void	handle_crtl_d(void)
 {
 	printf("exit\n");
-	exit(1);
+	exit(0);
 }
