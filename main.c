@@ -19,10 +19,10 @@ int	main(int argc, char **argv, char **envp)
 			handle_crtl_d();
 		if (line)
 		{
-			free(g_x->prompt);
 			handle_line(line);
 			free(line);
 		}
+		free(g_x->prompt);
 	}
 	//system("leaks a.out");
 }
