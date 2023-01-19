@@ -244,7 +244,7 @@ void handle_command_execution(int i, bool is_in_fork)
 	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command); 
 	g_x->error_code = 0;
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
-			g_x->cmds[i].infile, is_in_fork);
+		g_x->cmds[i].infile, is_in_fork);
 }
 
 void handle_line_utils(int i, int save_fd, char *str)
