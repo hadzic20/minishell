@@ -19,15 +19,22 @@ int	ft_word_count(char *str)
 	return (size);
 }
 
+// "   \t\t\t "
 int	ft_command_count(char *str)
 {
-	int	i;
-	int	size;
+	int		i;
+	int		size;
 	char	current_quote;
+	bool	is_all_space;
 
+	if (str == NULL)
+		return (0);
 	current_quote = '\0';
 	i = 0;
 	size = 1;
+	skip_spaces(str, &i);
+	if (str[i] == '\0')
+		return (0);
 	while (str[i] != '\0')
 	{
 		if (current_quote == '\0' && (str[i] == '"' || str[i] == '\''))
