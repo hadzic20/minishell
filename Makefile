@@ -31,10 +31,10 @@ OBJ			=	$(D_CMD:%.c=%.o) \
 
 
 CC = @cc
-CFLAGS = -g #-Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS = -I lib -g #-Wall -Wextra -Werror -fsanitize=address -g
 RM = rm -rf
 LIB		= ./lib/.rdl
-READLINE	=	-lreadline
+READLINE	= -L lib/readline	-lreadline -ltermcap
 
 
 all: $(LIB) $(NAME)
