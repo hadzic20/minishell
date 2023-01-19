@@ -69,7 +69,7 @@ char	*find_path(char *name)
 	path = ft_strjoin("/", name);
 	i = 0;
 	j = -1;
-	while (++j < ft_str2len(g_x->export) - 4)
+	while (++j < ft_str2len(g_x->export))
 	{
 		if (ft_strnstr(g_x->export[j], "PATH=", 5))
 		{
