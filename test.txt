@@ -1,0 +1,28 @@
+ls -la
+ls -la | grep main.c
+ls ||||
+ls | | | |
+ls asdflkj
+||
+	  !   
+	  @   
+	  #   
+	  $   
+	  %   
+	  ^   
+	  &   
+	  *   
+	  0   
+	  asd
+        		   
+hello world
+ls >out
+ls >>>>>>>>>>
+ls <<<<<<<<<asd
+ls <asd>other
+ls '>'what
+ls '<what'
+ls '>'what
+ls '>>what'
+ls '>>''what'
+ls '>>'ok
