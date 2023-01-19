@@ -25,7 +25,8 @@ void	redirect(int cmd_index)
 	printf("> RAW: >%s<\n", cmd);
 	cmd = g_x->cmds[cmd_index].raw_command;
 	i = 0;
-	while (cmd[i] != '\0' && g_x->error_code == 0)
+	g_x->redirect_error = 0;
+	while (cmd[i] != '\0' && g_x->redirect_error == 0)
 	{
 		if (cmd[i] == '\"' || cmd[i] == '\'')
 			skip_quote(cmd, &i);
@@ -35,6 +36,8 @@ void	redirect(int cmd_index)
 			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, true);
 		else if (cmd[i] == '>')
 			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, false);
+		else if (cmd[i] == '<' && cmd[i + 1] != '<')
+			g_x->cmds[cmd_index].outfile = redirect_input(cmd, &i);
 		i++;
 	}
 }
@@ -58,6 +61,23 @@ char	*redirect_path(char *s, int *i)
 	return (final);
 }
 
+int	redirect_input(char *str, int *i)
+{
+	char	*path;
+	int		file;
+
+	(*i) += 1;
+	path = redirect_path(str, i);
+	file = open(path, O_RDONLY, 0777);
+	if (file == -1)
+	{
+		perror("error opening file");
+		g_x->redirect_error = 1;
+		return (-1);
+	}
+	return (file);
+}
+
 int	redirect_output(char *str, int *i, bool is_append)
 {
 	char	*path;
@@ -75,78 +95,10 @@ int	redirect_output(char *str, int *i, bool is_append)
 	if (file == -1)
 	{
 		perror("error opening file");
-		g_x->error_code = 1;
+		g_x->redirect_error = 1;
 		return (-1);
 	}
 	return (file);
-}
-
-int	redirect_output_old(char *str, int mode)
-{
-	int		i;
-	int		j;
-	int		temp;
-	char	*path;
-	char	current_quote;
-
-	current_quote = '\0';
-	i = 0;
-	j = 0;
-	path = malloc(ft_strlen(str) * sizeof(char *));
-	while (str[i] != '>' && str[i] != '\0')
-	{
-		if (current_quote == '\0' && (str[i] == '"' || str[i] == '\''))
-			current_quote = str[i];
-		else if (current_quote != '\0' && str[i] == current_quote)
-			current_quote = '\0';
-		i++;
-	}
-	if (current_quote != '\0')
-		return (1);
-	i++;
-	if (str[i] == '>')
-		i++;
-	path[j] = '\0';
-	printf("output file is %s\n", path);
-	if (mode == 0)
-		j = open(path, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (mode == 1)
-		j = open(path, O_CREAT | O_RDWR | O_APPEND, 0777);
-	free (path);
-	return (j);
-}
-
-void	redirect_input(char *str)
-{
-	int		fd;
-	int		i;
-	int		j;
-	int		temp;
-	char	*path;
-
-	i = 0;
-	j = 0;
-	path = malloc(ft_strlen(str) * sizeof(char *));
-	while (str[i] != '<' && str[i] != '\0')
-		i++;
-	i++;
-	while (str[i] != '\0' && (str[i] == ' ' || str[i] == '\t'))
-		i ++;
-	while (str[i] != '\0' && str[i] != ' ' && str[i] != '\t' && str[i] != '|')
-	{
-		temp = i;
-		if (str[i] == '"')
-			path = ft_strjoin(path, double_quote(str, &i));
-		else if (str[i] == '\'')
-			path = ft_strjoin(path, quote(str, &i));
-		j = j + i - temp;
-		path[j++] = str[i++];
-	}
-	path[j] = '\0';
-	fd = open(path, O_RDONLY);
-	dup2(fd, 0);
-	close(fd);
-	free(path);
 }
 
 void	heredoc(char *str)

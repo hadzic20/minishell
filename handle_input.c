@@ -201,24 +201,23 @@ void	ft_exit(char **command)
 
 // Eger bir forkun icindeyse execve yapmadan once kendisi forklamasina
 // gerek yok
-void handle_command(char **command, int fd, bool is_in_fork)
+void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 {
 	int	pid;
 	int	status;
 
-	g_x->error_code = 0;
 	if (command == NULL)
 		return ;
 	if (ft_strnstr(command[0], "cd", 2) && command[0][2] == '\0')
 		ft_change_dir(command[1]);
 	else if (ft_strnstr(command[0], "pwd", 3) && command[0][3] == '\0')
-		mini_pwd(fd);
+		mini_pwd(outfd);
 	else if (ft_strnstr(command[0], "env", 3) && command[0][3] == '\0')
-		mini_env(fd);
+		mini_env(outfd);
 	else if (ft_strnstr(command[0], "echo", 4) && command[0][4] == '\0')
-		mini_echo(command, fd);
+		mini_echo(command, outfd);
 	else if (ft_strnstr(command[0], "export", 6) && command[0][6] == '\0')
-		ft_export(command, fd);
+		ft_export(command, outfd);
 	else if (ft_strnstr(command[0], "unset", 5) && command[0][5] == '\0')
 		ft_unset(command);
 	else if (ft_strnstr(command[0], "exit", 4) && command[0][4] == '\0')
@@ -227,21 +226,25 @@ void handle_command(char **command, int fd, bool is_in_fork)
 	{
 		pid = fork();
 		if (pid == 0)
-			mini_pathed(command, fd);
+		{
+			mini_pathed(command, outfd, infd);
+		}
 		status = 0;
 		waitpid(g_x->forks, &status, 0);
 		g_x->error_code = WEXITSTATUS(status);
 	}
 	else
-		mini_pathed(command, fd);
+		mini_pathed(command, outfd, infd);
 	free(command[0]);
 }
 
 // Give which command to execute and execute that.
 void handle_command_execution(int i, bool is_in_fork)
 {
-	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
-	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile, is_in_fork);
+	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command); 
+	g_x->error_code = 0;
+	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
+			g_x->cmds[i].infile, is_in_fork);
 }
 
 void handle_line_utils(int i, int save_fd, char *str)
@@ -274,7 +277,10 @@ void handle_line(char *str)
 	if (ft_command_count(str) == 1)
 	{
 		redirect(0);
-		handle_command_execution(0, false);
+		if (g_x->redirect_error == 0)
+			handle_command_execution(0, false);
+		else
+			g_x->error_code = g_x->redirect_error;
 	}
 	else
 	{
@@ -304,7 +310,6 @@ void handle_line(char *str)
 	}
 	while (waitpid(-1, &status, 0) != -1)
 		;
-	add_history(str);
 }
 
 void	handle_signal(int signum)

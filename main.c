@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line)
 		{
 			handle_line(line);
+			add_history(line);
 			free(line);
 		}
 		free(g_x->prompt);

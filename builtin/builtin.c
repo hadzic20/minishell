@@ -93,7 +93,7 @@ char	*find_path(char *name)
 }
 
 // Bu kesin olarak exitliyor
-void	mini_pathed(char **command, int fd)
+void	mini_pathed(char **command, int outfile, int infile)
 {
 	char	*path;
 	int		pid;
@@ -101,8 +101,10 @@ void	mini_pathed(char **command, int fd)
 	path = find_path(command[0]);
 	if (path == NULL)
 		exit(127);
-	if (fd > 1)
-		dup2(fd, 1);
+	if (outfile > 1)
+		dup2(outfile, 1);
+	if (infile > 0)
+		dup2(infile, 0);
 	execve(path, command, g_x->export);
 	perror("execve error");
 	if (errno == 13)
