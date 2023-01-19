@@ -73,13 +73,12 @@ static void	export_ctrl_and_add_var(char **parse)
 			export_add_variable(parse[i]);
 		else
 		{
-			//g_dt.status = 1;
 			printf("minishell: %s: `%s': not a valid identifier\n", \
 					parse[0], parse[i]);
+			g_x->error_code = 1;
 		}
 		i++;
 	}
-	//g_dt.status = 0;
 }
 
 void	ft_export(char **parse, int fd)
@@ -97,7 +96,6 @@ void	ft_export(char **parse, int fd)
 				printf("declare -x %s\n", g_x->export[i]);
 			i++;
 		}
-		//g_dt.status = 0;
 	}
 	else if (ft_strcmp(parse[i], "export") == 0 && parse[i + 1])
 		export_ctrl_and_add_var(parse);

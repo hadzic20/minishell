@@ -30,4 +30,5 @@ int	unset_export_helper(int x)
 void	unset_error(char **parse, int i)
 {
 	printf("minishell: unset: `%s': not a valid identifier\n", parse[i]);
+	g_x->error_code = 1;
 }
