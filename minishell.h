@@ -70,6 +70,7 @@ void	mini_env(int fd);
 void	mini_pathed(char **command, int fd);
 int		ft_str2len(char **str2);
 int		ft_word_count(char *str);
+void	skip_spaces(char *s, int *i);
 char	*ft_strdup(const char *s1);
 char	*get_user(void);
 char	*get_path(void);
