@@ -34,7 +34,7 @@ int	ft_command_count(char *str)
 			current_quote = str[i];
 		else if (current_quote != '\0' && str[i] == current_quote)
 			current_quote = '\0';
-		if (str[i] == '|' && str[i + 1] != '|' && current_quote == '\0')
+		if (str[i] == '|' && current_quote == '\0')
 			size++;
 		i++;
 	}
