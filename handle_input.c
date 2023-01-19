@@ -38,7 +38,6 @@ bool	expand_single(char *s, int *i, char **dst)
 {
 	int	k;
 
-	// command uninitialized haliyle strjoin yapiliyor
 	if (s[*i] == '"')
 	{
 		//printf("before join is >%s<\n", *dst);
@@ -80,11 +79,12 @@ void	print_list(char **list)
 		printf("> %s\n", list[i++]);
 }
 
-char **extract_command(char *s)
+// Burada leakler biraz sıkıntılı
+char	**extract_command(char *s)
 {
-	int i;
-	int j;
-	char **command;
+	int		i;
+	int 	j;
+	char	**command;
 
 	j = 0;
 	if (ft_word_count(s) == 0)
@@ -111,7 +111,7 @@ char **extract_command(char *s)
 	return (command);
 }
 
-// 
+// OK
 void	seperate_command(char *s)
 {
 	int	i;
@@ -160,8 +160,9 @@ char	*double_quote(char *s, int *i)
 		if (s[*i] == '$')
 		{
 			temp = dollar(s, i);
+			printf("> dollar: >%s<\n", temp);
 			command = ft_strjoin(command, temp);
-			j = ft_strlen(command) - 1;
+			j = ft_strlen(command);
 		}
 		else if (s[*i] == '\0')
 		{
@@ -191,8 +192,6 @@ char	*quote(char *s, int *i)
 			print_error("minishell", "command", "unclosed quote");
 			return (NULL);
 		}
-		if (s[*i] == '"')
-			command = ft_strjoin(command, double_quote(s, i));
 		command[j++] = s[(*i)++];
 	}
 	if (s[*i] != '\0')
@@ -252,6 +251,7 @@ void handle_command(char **command, int fd, bool is_in_fork)
 void handle_command_execution(int i, bool is_in_fork)
 {
 	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
+	print_list(g_x->cmds[i].handled_cmd);
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile, is_in_fork);
 }
 
