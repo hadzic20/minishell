@@ -5,11 +5,11 @@ void	skip_quote(char *s, int *i)
 {
 	char	quote;
 
-	quote = *s;
+	quote = s[*i];
 	(*i)++;
-	while (*s != quote)
+	while (s[*i] != quote)
 	{
-		if (*s == '\0')
+		if (s[*i] == '\0')
 			return ;
 		(*i)++;
 	}
@@ -41,7 +41,8 @@ void	redirect(int cmd_index)
 			g_x->cmds[cmd_index].infile = heredoc(cmd, &i);
 		else if (cmd[i] == '<')
 			g_x->cmds[cmd_index].infile = redirect_input(cmd, &i);
-		i++;
+		if (cmd[i] != '\0')
+			i++;
 	}
 }
 

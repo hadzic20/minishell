@@ -31,13 +31,23 @@ void	skip_redirection(char *s, int *i)
 	skip_spaces(s, i);
 }
 
+char	*strjoin_free(char *a, char *b)
+{
+	char	*new;
+
+	new = ft_strjoin(a, b);
+	free(a);
+	free(b);
+	return (new);
+}
+
 /* Returns false when sees a redirection so it can be skipped
  *  without increasing j
  */
 // TODO: Memory leakler
 bool	expand_single(char *s, int *i, char **dst)
 {
-	int	k;
+	int		k;
 
 	if (s[*i] == '"')
 		*dst = ft_strjoin(*dst, double_quote(s, i));
@@ -53,6 +63,7 @@ bool	expand_single(char *s, int *i, char **dst)
 	else
 	{
 		k = ft_strlen(*dst);
+		*dst = strjoin_free(*dst, ft_strdup(s));
 		while (s[*i] != '\0' && !is_metachar(s[*i]) && !ft_isspace(s[*i]))
 			(*dst)[k++] = s[(*i)++];
 		(*dst)[k] = '\0';
@@ -83,7 +94,7 @@ char	**extract_command(char *s)
 	i = -1;
 	while (++i <= ft_word_count(s))
 	{	
-		command[i] = (char *)malloc(ft_strlen(s) * sizeof(char));
+		command[i] = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
 		command[i][0] = '\0';
 	}
 	i = 0;
@@ -115,7 +126,7 @@ void	seperate_command(char *s)
 	g_x->cmds = (t_command *)malloc((ft_command_count(s) + 1) * \
 	sizeof(t_command));
 	while (++i <= ft_command_count(s))
-		g_x->cmds[i].raw_command = (char *)malloc(ft_strlen(s) * sizeof(char));
+		g_x->cmds[i].raw_command = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -136,6 +147,7 @@ void	seperate_command(char *s)
 	g_x->cmds[j].raw_command = NULL;
 }
 
+// "asd"
 char	*double_quote(char *s, int *i)
 {
 	int		j;
@@ -161,6 +173,7 @@ char	*double_quote(char *s, int *i)
 		else
 			command[j++] = s[(*i)++];
 	}
+	command[j] = '\0';
 	if (s[*i] != '\0')
 		(*i)++;
 	return (command);
@@ -184,6 +197,7 @@ char	*quote(char *s, int *i)
 		}
 		command[j++] = s[(*i)++];
 	}
+	command[j] = '\0';
 	if (s[*i] != '\0')
 		(*i)++;
 	return (command);
@@ -230,7 +244,7 @@ void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 			mini_pathed(command, outfd, infd);
 		}
 		status = 0;
-		waitpid(g_x->forks, &status, 0);
+		waitpid(pid, &status, 0);
 		g_x->error_code = WEXITSTATUS(status);
 	}
 	else

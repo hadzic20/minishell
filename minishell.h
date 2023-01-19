@@ -28,7 +28,6 @@ typedef struct s_command
 
 typedef struct s_x
 {
-	int		forks;
 	int		error_code;
 	int		redirect_error;
 	char	**envp;
