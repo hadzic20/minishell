@@ -273,6 +273,8 @@ void handle_line(char *str)
 	int status;
 	int pid;
 
+	if (ft_command_count(str) == 0)
+		return ;
 	i = -1;
 	seperate_command(str);
 	status = 0;
