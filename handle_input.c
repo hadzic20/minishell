@@ -214,6 +214,9 @@ void ft_exit(char **command)
 // gerek yok
 void handle_command(char **command, int fd, bool is_in_fork)
 {
+	int	pid;
+	int	status;
+
 	g_x->error_code = 0;
 	if (command == NULL)
 		return ;
@@ -231,16 +234,17 @@ void handle_command(char **command, int fd, bool is_in_fork)
 		ft_unset(command);
 	else if (ft_strnstr(command[0], "exit", 4) && command[0][4] == '\0')
 		ft_exit(command);
-	else
+	else if (!is_in_fork)
 	{
-		if (!is_in_fork)
-		{
-			g_x->forks = fork();
-			if (g_x->forks != 0)
-				return ;
-		}
-		mini_pathed(command, fd);
+		pid = fork();
+		if (pid == 0)
+			mini_pathed(command, fd);
+		status = 0;
+		waitpid(g_x->forks, &status, 0);
+		g_x->error_code = WEXITSTATUS(status);
 	}
+	else
+		mini_pathed(command, fd);
 	free(command[0]);
 }
 
@@ -282,16 +286,13 @@ void handle_line(char *str)
 	{
 		redirect(0);
 		handle_command_execution(0, false);
-		waitpid(g_x->forks, &status, 0);
-		// Set ? to WEXITSTATUS(status)
-		g_x->error_code = WEXITSTATUS(status);
 	}
 	else
 	{
 		while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
 		{
 			g_x->cmds[i].outfile = 1;
-    		pipe(g_x->cmds[i].p);
+			pipe(g_x->cmds[i].p);
 			pid = fork();
 			last_pid = pid;
 			if (pid == 0)
