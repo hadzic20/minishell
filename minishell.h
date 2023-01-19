@@ -56,7 +56,7 @@ char    *double_quote(char *s, int *i);
 void	redirect(int i);
 int	redirect_input(char *str, int *i);
 int		redirect_output(char *str, int *i, bool is_append);
-void	heredoc(char *str);
+int	heredoc(char *str, int *i);
 int		ft_change_dir(char *path);
 void	handle_line(char *str);
 void	handle_crtl_d(void);

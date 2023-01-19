@@ -208,7 +208,7 @@ void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 
 	if (command == NULL)
 		return ;
-	if (ft_strnstr(command[0], "cd", 2) && command[0][2] == '\0')
+	if (ft_strnstr(command[0], "cd", sizeof("cd")) && command[0][2] == '\0')
 		ft_change_dir(command[1]);
 	else if (ft_strnstr(command[0], "pwd", 3) && command[0][3] == '\0')
 		mini_pwd(outfd);
@@ -286,13 +286,18 @@ void handle_line(char *str)
 	{
 		while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
 		{
+			redirect(i);
+			if (g_x->redirect_error != 0)
+			{
+				g_x->error_code = g_x->redirect_error;
+				return ;
+			}
 			g_x->cmds[i].outfile = 1;
 			pipe(g_x->cmds[i].p);
 			pid = fork();
 			last_pid = pid;
 			if (pid == 0)
 			{
-				redirect(i);
 				handle_line_utils(i, save_fd, str);
 				// Eğer bir builtinse ve hata yoksa buraya kod gelebilir...
 				exit(g_x->error_code);

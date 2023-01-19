@@ -22,7 +22,6 @@ void	redirect(int cmd_index)
 	char	*cmd;
 	int		i;
 
-	printf("> RAW: >%s<\n", cmd);
 	cmd = g_x->cmds[cmd_index].raw_command;
 	i = 0;
 	g_x->redirect_error = 0;
@@ -36,8 +35,10 @@ void	redirect(int cmd_index)
 			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, true);
 		else if (cmd[i] == '>')
 			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, false);
-		else if (cmd[i] == '<' && cmd[i + 1] != '<')
-			g_x->cmds[cmd_index].outfile = redirect_input(cmd, &i);
+		else if (cmd[i] == '<' && cmd[i + 1] == '<')
+			g_x->cmds[cmd_index].infile = heredoc(cmd, &i);
+		else if (cmd[i] == '<')
+			g_x->cmds[cmd_index].infile = redirect_input(cmd, &i);
 		i++;
 	}
 }
@@ -89,9 +90,9 @@ int	redirect_output(char *str, int *i, bool is_append)
 		(*i) += 1;
 	path = redirect_path(str, i);
 	if (is_append)
-		file = open(path, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	else
 		file = open(path, O_CREAT | O_RDWR | O_APPEND, 0777);
+	else
+		file = open(path, O_CREAT | O_RDWR | O_TRUNC, 0777);
 	if (file == -1)
 	{
 		perror("error opening file");
@@ -101,52 +102,56 @@ int	redirect_output(char *str, int *i, bool is_append)
 	return (file);
 }
 
-void	heredoc(char *str)
+// C-c to heredoc
+void	heredoc_handler(int sig)
 {
-	int		i;
-	int		j;
-	int		temp;
-	char	*path;
-	char	*line;
-	char	*bucket;
-	char	current_quote;
+	(void)sig;
+	g_x->redirect_error = 130;
+	close(0);
+}
 
-	current_quote = '\0';
-	i = 0;
-	j = 0;
-	path = malloc(ft_strlen(str) * sizeof(char *));
-	while (str[i] != '<' && str[i] != '\0')
+void	heredoc_loop(const char *file, int fd)
+{
+	char	*line;
+
+	while (true)
 	{
-		if (current_quote == '\0' && (str[i] == '"' || str[i] == '\''))
-			current_quote = str[i];
-		else if (current_quote != '\0' && str[i] == current_quote)
-			current_quote = '\0';
-		i++;
+		line = readline("> ");
+		if (line == NULL)
+			break ;
+		if (ft_strncmp(line, file, ft_strlen(file) + 1) == 0)
+		{
+			free(line);
+			break ;
+		}
+		ft_putendl_fd(line, fd);
+		free(line);
 	}
-	if (current_quote != '\0')
-		return ;
-	i += 2;
-	while (str[i] != '\0' && (str[i] == ' ' || str[i] == '\t'))
-		i ++;
-	while (str[i] != '\0' && str[i] != ' ' && str[i] != '\t' && str[i] != '|')
+}
+
+int	heredoc(char *str, int *i)
+{
+	int		fds[2];
+	void	(*mem_handler)(int);
+	int		readline_dup;
+	char	*file;
+
+	dprintf(2, "==HEREDOC==\n");
+	(*i) += 2;
+	file = redirect_path(str, i);
+	readline_dup = dup(0);
+	if (pipe(fds) == -1)
+		return (-1);
+	mem_handler = signal(SIGINT, heredoc_handler);
+	heredoc_loop(file, fds[1]);
+	signal(SIGINT, mem_handler);
+	dup2(readline_dup, 0);
+	close(readline_dup);
+	close(fds[1]);
+	if (g_x->redirect_error != 0)
 	{
-		temp = i;
-		if (str[i] == '"')
-			path = ft_strjoin(path, double_quote(str, &i));
-		else if (str[i] == '\'')
-			path = ft_strjoin(path, quote(str, &i));
-		j = j + i - temp;
-		path[j++] = str[i++];
+		close(fds[0]);
+		return (-1);
 	}
-	path[j] = '\0';
-	printf("heredoc is %s\n", path);
-	line = readline("heredoc> ");
-	bucket = malloc(sizeof(char));
-	while (!(ft_strnstr(line, path, ft_strlen(path)) && line[ft_strlen(path)] == '\0'))
-	{
-		line = ft_strjoin(line, "\n");
-		bucket = ft_strjoin(bucket, line);
-		line = readline("heredoc> ");
-	}
-	printf("%s", bucket);
+	return (fds[0]);
 }
