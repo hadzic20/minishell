@@ -30,7 +30,7 @@ char	**export_sorter(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (envp[i + 1] && (envp[i][0] > envp[i + 1][0]))
+		if (envp[i + 1] && ft_strncmp(envp[i], envp[i + 1], ft_strlen(envp[i]) + 1) > 0)
 		{
 			tmp = envp[i];
 			envp[i] = envp[i + 1];
