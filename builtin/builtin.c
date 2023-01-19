@@ -110,27 +110,23 @@ void	mini_pathed(char **command, int fd)
 
 void	mini_echo(char **parse, int fd)
 {
-	int	i;
+	int		i;
+	bool	newline;
 
+	newline = true;
 	i = 1;
-	if ((ft_strcmp(parse[1], "-n")) == 0) // -n varsa
+	while (parse[i] && ft_strcmp(parse[i], "-n") == 0)
 	{
-		while (parse[++i])
-		{
-			ft_putstr_fd(parse[i], fd);
-			if (parse[i] && parse[i + 1])
-				ft_putstr_fd(" ", fd);
-		}
+		newline = false;
+		i++;
 	}
-	else if (ft_strcmp(parse[1], "-n")) // -n yoksa
+	while (parse[i])
 	{
-		i = 0;
-		while (parse[++i])
-		{
-			ft_putstr_fd(parse[i], fd);
-			if (parse[i] && parse[i + 1])
-				ft_putstr_fd(" ", fd);
-		}
+		ft_putstr_fd(parse[i], fd);
+		if (parse[i] && parse[i + 1])
+			ft_putstr_fd(" ", fd);
+		i++;
+	}
+	if (newline)
 		ft_putstr_fd("\n", fd);
-	}
 }
