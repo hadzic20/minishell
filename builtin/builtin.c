@@ -65,31 +65,35 @@ char	*find_path(char *name)
 	int j;
 	
 	if (name[0] == '.' || name[0] == '/')
-		return (name);
-	path = ft_strjoin("/", name);
+		return (ft_strdup(name));
+	path = strjoin_free(ft_strdup("/"), name);
 	i = 0;
 	j = -1;
 	while (++j < ft_str2len(g_x->export))
 	{
-		if (ft_strnstr(g_x->export[j], "PATH=", 5))
+		if (ft_strncmp(g_x->export[j], "PATH=", 5) == 0)
 		{
 			str = ft_substr(g_x->export[j], 5, ft_strlen(g_x->export[j]));
 			i = 1;
+			break ;
 		}
 	}
 	if (i == 0)
 		return (NULL);
-	path_to_search = ft_split(str, ':');
+	path_to_search = ft_split_free(str, ':');
 	i = -1;
+	str = NULL;
 	while (path_to_search[++i])
 	{
-		path_to_search[i] = ft_strjoin(path_to_search[i], path);
+		path_to_search[i] = strjoin_free(path_to_search[i], ft_strdup(path));
 		if (access(path_to_search[i], X_OK) != -1)
 		{
-			return (path_to_search[i]);
+			str = ft_strdup(path_to_search[i]);
+			break ;
 		}
 	}
-	return (NULL);
+	ft_free(path_to_search);
+	return (str);
 }
 
 // Bu kesin olarak exitliyor

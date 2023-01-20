@@ -31,16 +31,6 @@ void	skip_redirection(char *s, int *i)
 	skip_spaces(s, i);
 }
 
-char	*strjoin_free(char *a, char *b)
-{
-	char	*new;
-
-	new = ft_strjoin(a, b);
-	free(a);
-	free(b);
-	return (new);
-}
-
 /* Returns false when sees a redirection so it can be skipped
  *  without increasing j
  */
