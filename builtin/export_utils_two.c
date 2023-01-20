@@ -30,7 +30,7 @@ int	export_add_var_body_helper(t_export_vars *exp, char *var)
 	else if (equal_finder(g_x->export[exp->i]) == 1 \
 			&& equal_finder(var) == 1)
 	{
-		if (export_add_var_helper2(exp, var))
+		if (export_add_var_helper(exp, var))
 			return (1);
 	}
 	else
@@ -60,41 +60,13 @@ void	exprt_addvar_mini_help(t_export_vars *exp, int *env_ctrl, \
 	}
 }
 
+// No equals
 int	export_add_var_helper(t_export_vars *exp, char *var)
 {
-	int		x;
-
-	x = -1;
 	free(exp->env_name);
-	//exprt_addvar_mini_help(exp, &env_ctrl, &x, var);
 	free(exp->tmp);
 	free(g_x->export[exp->i]);
 	g_x->export[exp->i] = ft_strdup(var);
-	// if (env_ctrl == 0)
-	// {
-	// 	g_x->envp = ft_rrealloc(g_x->envp, ft_str2len(g_x->envp) + 1);
-	// 	g_x->envp[x] = ft_strdup(var);
-	// 	g_x->envp[x + 1] = 0;
-	// }
-	g_x->export = export_sorter(g_x->export);
-	return (1);
-}
-
-int	export_add_var_helper2(t_export_vars *exp, char *var)
-{
-	int	x;
-
-	x = -1;
-	free(exp->env_name);
-	//exprt_addvar_mini_help(exp, &env_ctrl, &x, var);
-	free(exp->tmp);
-	free(g_x->export[exp->i]);
-	g_x->export[exp->i] = ft_strdup(var);
-	// if (env_ctrl == 0)
-	// {
-	// 	g_x->envp[x] = ft_strdup(var);
-	// 	g_x->envp[x + 1] = 0;
-	// }
 	g_x->export = export_sorter(g_x->export);
 	return (1);
 }
