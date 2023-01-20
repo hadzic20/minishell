@@ -40,11 +40,11 @@ bool	expand_single(char *s, int *i, char **dst)
 	int		k;
 
 	if (s[*i] == '"')
-		*dst = ft_strjoin(*dst, double_quote(s, i));
+		*dst = strjoin_free(*dst, double_quote(s, i)); // leak yok???
 	else if (s[*i] == '\'')
-		*dst = ft_strjoin(*dst, quote(s, i));
+		*dst = strjoin_free(*dst, quote(s, i)); // bunda da leak yok. dolarda neden var?
 	else if (s[*i] == '$')
-		*dst = ft_strjoin(*dst, dollar(s, i));
+		*dst = strjoin_free(*dst, dollar(s, i)); // leak ama neden?
 	else if (s[*i] == '<' || s[*i] == '>')
 	{
 		skip_redirection(s, i);
@@ -244,7 +244,7 @@ void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 // Give which command to execute and execute that.
 void handle_command_execution(int i, bool is_in_fork)
 {
-	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command); 
+	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
 	g_x->error_code = 0;
 
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
@@ -314,7 +314,6 @@ void handle_line(char *str)
 		close(save_fd);
 		status = 0;
 		waitpid(last_pid, &status, 0);
-		// Set ? to WEXITSTATUS(status)
 		g_x->error_code = WEXITSTATUS(status);
 	}
 	while (waitpid(-1, &status, 0) != -1)

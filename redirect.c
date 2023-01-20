@@ -27,6 +27,7 @@ void	redirect(int cmd_index)
 	g_x->cmds[cmd_index].outfile = 0;
 	i = 0;
 	g_x->redirect_error = 0;
+	//while'ın içinde bir leak var ama bualamadım.
 	while (cmd[i] != '\0' && g_x->redirect_error == 0)
 	{
 		if (cmd[i] == '\"' || cmd[i] == '\'')

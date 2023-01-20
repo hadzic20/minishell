@@ -107,8 +107,12 @@ void	mini_pathed(char **command, int outfile, int infile)
 		exit(127);
 	if (outfile > 1)
 		dup2(outfile, 1);
+	if (outfile > 1)
+		close(outfile);
 	if (infile > 0)
 		dup2(infile, 0);
+	if (infile > 0)
+		close(infile);
 	execve(path, command, g_x->export);
 	perror("execve error");
 	if (errno == 13)
