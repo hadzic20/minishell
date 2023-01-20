@@ -155,7 +155,8 @@ char	*double_quote(char *s, int *i)
 	char	*temp;
 
 	j = 0;
-	command = (char *)malloc(ft_strlen(s) * sizeof(char));
+	command = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
+	command[0] = '\0';
 	(*i)++;
 	while (s[*i] != '"')
 	{

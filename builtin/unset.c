@@ -34,10 +34,7 @@ void	ft_unset(char **parse)
 
 	i = 0;
 	if (!parse[++i])
-	{
-		printf("");
 		return ;
-	}
 	while (parse[i])
 	{
 		if (equal_finder(parse[i]) == 0)

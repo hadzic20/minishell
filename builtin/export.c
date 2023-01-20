@@ -67,7 +67,7 @@ static void	export_ctrl_and_add_var(char **parse)
 	while (parse[i])
 	{
 		if (parse[i][0] == '_' && (parse[i][1] == 0 || parse[i][1] == '='))
-			printf("");
+			;
 		else if ((parse[i][0] == '_' && parse[i][1] != 0) || \
 				ft_isalpha(parse[i][0]))
 			export_add_variable(parse[i]);
