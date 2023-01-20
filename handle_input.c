@@ -223,19 +223,19 @@ void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 
 	if (command == NULL)
 		return ;
-	if (ft_strnstr(command[0], "cd", sizeof("cd")))
+	if (ft_strncmp(command[0], "cd", sizeof("cd")) == 0)
 		ft_change_dir(command[1]);
-	else if (ft_strnstr(command[0], "pwd", sizeof("pwd")))
+	else if (ft_strncmp(command[0], "pwd", sizeof("pwd")) == 0)
 		mini_pwd(outfd);
-	else if (ft_strnstr(command[0], "env", sizeof("env")))
+	else if (ft_strncmp(command[0], "env", sizeof("env")) == 0)
 		mini_env(outfd);
-	else if (ft_strnstr(command[0], "echo", sizeof("echo")))
+	else if (ft_strncmp(command[0], "echo", sizeof("echo")) == 0)
 		mini_echo(command, outfd);
-	else if (ft_strnstr(command[0], "export", sizeof("export")))
+	else if (ft_strncmp(command[0], "export", sizeof("export")) == 0)
 		ft_export(command, outfd);
-	else if (ft_strnstr(command[0], "unset", sizeof("unset")))
+	else if (ft_strncmp(command[0], "unset", sizeof("unset")) == 0)
 		ft_unset(command);
-	else if (ft_strnstr(command[0], "exit", sizeof("exit")))
+	else if (ft_strncmp(command[0], "exit", sizeof("exit")) == 0)
 		ft_exit(command);
 	else if (!is_in_fork)
 	{
