@@ -5,7 +5,7 @@ void	*ft_realloc(void *ptr, size_t size)
 	void	*temp;
 
 	temp = malloc(sizeof(char) * size);
-	ft_strlcpy(temp, ptr, ft_strlen(ptr) + 1);
+	ft_strlcpy(temp, ptr, size);
 	free(ptr);
 	return (temp);
 }
@@ -16,7 +16,7 @@ char	**ft_rrealloc(char **ptr, size_t size)
 	int		i;
 
 	i = -1;
-	temp = malloc(sizeof(char *) * size + 1);
+	temp = malloc(sizeof(char *) * (size + 1));
 	while (ptr[++i])
 	{
 		temp[i] = malloc(sizeof(char) * (ft_strlen(ptr[i]) + 1));
