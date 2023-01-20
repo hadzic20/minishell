@@ -25,6 +25,11 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 		}
 		free(g_x->prompt);
+		free(g_x->cmds->raw_command);
+		// int i = -1;
+		// while (++i < ft_command_count(line) - 1)
+		// 	free(g_x->cmds->handled_cmd[i]);
+		// free(g_x->cmds->handled_cmd);
 	}
 	//system("leaks a.out");
 }

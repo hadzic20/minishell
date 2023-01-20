@@ -80,13 +80,10 @@ char	**extract_command(char *s)
 	j = 0;
 	if (ft_word_count(s) == 0)
 		return (NULL);
-	command = (char **)malloc((ft_word_count(s) + 1) * sizeof(char *));
+	command = ft_calloc((ft_word_count(s) + 1), sizeof(char *)); // malloc -> calloc
 	i = -1;
 	while (++i <= ft_word_count(s))
-	{	
-		command[i] = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
-		command[i][0] = '\0';
-	}
+		command[i] = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -98,6 +95,7 @@ char	**extract_command(char *s)
 		if (ft_isspace(s[i]) || s[i] == '\0')
 			j++;
 	}
+	free(command[j]);
 	command[j] = NULL;
 	return (command);
 }
@@ -116,7 +114,7 @@ void	seperate_command(char *s)
 	g_x->cmds = (t_command *)malloc((ft_command_count(s) + 1) * \
 	sizeof(t_command));
 	while (++i <= ft_command_count(s))
-		g_x->cmds[i].raw_command = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
+		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -134,7 +132,7 @@ void	seperate_command(char *s)
 			i++;
 		j++;
 	}
-	g_x->cmds[j].raw_command = NULL;
+	// g_x->cmds[j].raw_command = NULL;
 }
 
 // "asd"
@@ -248,6 +246,7 @@ void handle_command_execution(int i, bool is_in_fork)
 {
 	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command); 
 	g_x->error_code = 0;
+
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
 		g_x->cmds[i].infile, is_in_fork);
 }

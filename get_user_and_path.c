@@ -26,10 +26,12 @@ char	*get_path(void)
 {
 	char	*home;
 	char	*path;
+	char	*tmpPath;
 
 	home = getenv("HOME");
-	path = getcwd(NULL, 0);
-	path = ft_substr(path, ft_strlen(home), ft_strlen(path));
+	tmpPath = getcwd(NULL, 0);
+	path = ft_substr(tmpPath, ft_strlen(home), ft_strlen(tmpPath));
+	free(tmpPath);
 	return (path);
 }
 
@@ -41,6 +43,7 @@ void	get_prompt(void)
 	char	*temp2;
 
 	user = get_user();
+
 	temp = ft_strjoin(user, "@minishell ~");
 	free(user);
 	path = get_path();

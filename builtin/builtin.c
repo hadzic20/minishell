@@ -92,6 +92,7 @@ char	*find_path(char *name)
 			break ;
 		}
 	}
+	print_error("minishell", "command not found", name);
 	ft_free(path_to_search);
 	return (str);
 }
