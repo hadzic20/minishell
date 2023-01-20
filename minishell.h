@@ -82,10 +82,10 @@ char	**storage_and_copy(char **env);
 char	*env_name_getter(char *var);
 char	*env_getter(char *str);
 int		equal_finder(char *var);
-static int	export_add_var_body(t_export_vars *exp, char *var);
-static void	export_add_variable(char *var);
-static void	export_display(int i, int fd);
-static void	export_ctrl_and_add_var(char **parse);
+int	export_add_var_body(t_export_vars *exp, char *var);
+void	export_add_variable(char *var);
+void	export_display(int i, int fd);
+void	export_ctrl_and_add_var(char **parse);
 char	**ft_rrealloc(char **ptr, size_t size);
 int		export_add_var_helper(t_export_vars *exp, char *var);
 int		export_add_var_helper2(t_export_vars *exp, char *var);
@@ -96,7 +96,7 @@ int	unset_env_helper(int x);
 int	unset_export_helper(int x);
 void	unset_error(char **parse, int i);
 void	ft_unset(char **parse);
-static void	unset_export(char **parse, char **name, int i);
-static void	unset_env(char **parse, char **name, int i);
+void	unset_export(char **parse, char **name, int i);
+void	unset_env(char **parse, char **name, int i);
 
 #endif

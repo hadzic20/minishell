@@ -3,7 +3,7 @@
 // var is ahmet=mehmet
 // exp->tmp is ahmet
 // If this returns true, parent returns
-static int	export_add_var_body(t_export_vars *exp, char *var)
+int	export_add_var_body(t_export_vars *exp, char *var)
 {
 	exp->env_name = env_name_getter(g_x->export[exp->i]);
 	if (ft_strcmp(exp->env_name, exp->tmp) == 0)
@@ -17,7 +17,7 @@ static int	export_add_var_body(t_export_vars *exp, char *var)
 
 // ahmet=mehmet
 // The set or update function
-static void	export_add_variable(char *var)
+void	export_add_variable(char *var)
 {
 	t_export_vars	exp;
 
@@ -28,6 +28,7 @@ static void	export_add_variable(char *var)
 		if (export_add_var_body(&exp, var))
 			return ;
 	}
+	// exportun uzunlugu
 	free(exp.tmp);
 	if (equal_finder(var) == 1)
 		export_add_var_equal(&exp, var);
@@ -40,7 +41,7 @@ static void	export_add_variable(char *var)
 	}
 }
 
-static void	export_display(int i, int fd)
+void	export_display(int i, int fd)
 {
 	char	*env_name;
 	char	*value;
@@ -59,7 +60,7 @@ static void	export_display(int i, int fd)
 
 // parse is the argv
 // export a=123 b=234
-static void	export_ctrl_and_add_var(char **parse)
+void	export_ctrl_and_add_var(char **parse)
 {
 	int	i;
 
