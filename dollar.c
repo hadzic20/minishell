@@ -4,6 +4,7 @@ char	*status_case(char *s, int *i)
 {
 	char	*str;
 
+	(void)s;
 	str = ft_itoa(g_x->error_code);
 	(*i)++;
 	return (str);

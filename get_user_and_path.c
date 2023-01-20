@@ -24,7 +24,6 @@ char	*get_user(void)
 
 char	*get_path(void)
 {
-	int		i;
 	char	*home;
 	char	*path;
 

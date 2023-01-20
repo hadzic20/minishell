@@ -96,7 +96,6 @@ char	*find_path(char *name)
 void	mini_pathed(char **command, int outfile, int infile)
 {
 	char	*path;
-	int		pid;
 
 	path = find_path(command[0]);
 	if (path == NULL)

@@ -25,7 +25,6 @@ int	ft_command_count(char *str)
 	int		i;
 	int		size;
 	char	current_quote;
-	bool	is_all_space;
 
 	if (str == NULL)
 		return (0);
