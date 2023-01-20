@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static void	unset_export(char **parse, char **name, int i)
+void	unset_export(char **parse, char **name, int i)
 {
 	int		x;
 	char	*tmp;
