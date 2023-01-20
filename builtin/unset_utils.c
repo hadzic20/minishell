@@ -4,25 +4,29 @@ char	**ft_rrealloc_with_skip(char **ptr, int index_to_skip)
 {
 	char	**temp;
 	int		i;
+	int		tmp_index;
 
-	temp = malloc(sizeof(char *) * ft_str2len(g_x->export) + 1);
+	temp = malloc(sizeof(char *) * (ft_str2len(g_x->export) - 1 + 1));
 	i = -1;
 	while (ptr[++i])
 	{
 		if (i == index_to_skip)
 			continue ;
-		temp[i] = malloc(sizeof(char) * (ft_strlen(ptr[i]) + 1));
-		temp[i] = ft_memcpy(temp[i], ptr[i], ft_strlen(ptr[i]) + 1);
+		if (i > index_to_skip)
+			tmp_index = i - 1;
+		else
+			tmp_index = i;
+		temp[tmp_index] = malloc(sizeof(char) * (ft_strlen(ptr[i]) + 1));
+		temp[tmp_index] = ft_memcpy(temp[tmp_index],
+				ptr[i], ft_strlen(ptr[i]) + 1);
 	}
-	temp[i] = 0;
+	temp[tmp_index + 1] = NULL;
 	ft_free(ptr);
 	return (temp);
 }
 
 int	unset_export_helper(int x)
 {
-	free(g_x->export[x]);
-	g_x->export[x] = 0;
 	g_x->export = ft_rrealloc_with_skip(g_x->export, x);
 	return (1);
 }
