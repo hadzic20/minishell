@@ -1,7 +1,5 @@
 Makefile
-a.tx
 a.txt
-b.txt
 builtin
 compile_commands.json
 dollar.c

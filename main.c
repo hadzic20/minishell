@@ -31,5 +31,5 @@ int	main(int argc, char **argv, char **envp)
 		// 	free(g_x->cmds->handled_cmd[i]);
 		// free(g_x->cmds->handled_cmd);
 	}
-	//system("leaks a.out");
+	system("leaks minishell");
 }
