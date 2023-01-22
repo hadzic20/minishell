@@ -92,7 +92,6 @@ char	**extract_command(char *s)
 			break ;
 		if (len <= j)
 		{
-			printf("j is %d\n", j);
 			command = ft_rrealloc(command, j + 1);
 			command[j] = malloc(ft_strlen(s) * sizeof(char));
 			command[j][0] = '\0';
