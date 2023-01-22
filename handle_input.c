@@ -76,26 +76,36 @@ char	**extract_command(char *s)
 	int		i;
 	int 	j;
 	char	**command;
+	int		len;
 
 	j = 0;
 	if (ft_word_count(s) == 0)
 		return (NULL);
-	command = ft_calloc((g_x->cmd_count + 1), sizeof(char *)); // malloc -> calloc
-	i = -1;
-	while (++i <= ft_word_count(s))
-		command[i] = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
+	command = malloc(1 * sizeof(char *));
+	command[0] = NULL;
 	i = 0;
+	len = 0;
 	while (s[i] != '\0')
 	{
 		skip_spaces(s, &i);
 		if (s[i] == '\0')
 			break ;
+		if (len <= j)
+		{
+			printf("j is %d\n", j);
+			command = ft_rrealloc(command, j + 1);
+			command[j] = malloc(ft_strlen(s) * sizeof(char));
+			command[j][0] = '\0';
+			command[j + 1] = NULL;
+			len = j;
+		}
 		if (!expand_single(s, &i, &command[j]))
 			continue ;
 		if (ft_isspace(s[i]) || s[i] == '\0')
 			j++;
 	}
-	free(command[j]);
+	if (command[j])
+		free(command[j]);
 	command[j] = NULL;
 	return (command);
 }
@@ -111,7 +121,7 @@ void	seperate_command(char *s)
 	current_quote = '\0';
 	i = -1;
 	j = 0;
-	g_x->cmds = malloc((g_x->cmd_count + 1)*sizeof(t_command));
+	g_x->cmds = malloc((g_x->cmd_count)*sizeof(t_command));
 	while (++i < g_x->cmd_count)
 		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
 	i = 0;
@@ -131,7 +141,6 @@ void	seperate_command(char *s)
 			i++;
 		j++;
 	}
-	// g_x->cmds[j].raw_command = NULL;
 }
 
 // "asd"
@@ -237,7 +246,6 @@ void handle_command(char **command, int outfd, int infd, bool is_in_fork)
 	}
 	else
 		mini_pathed(command, outfd, infd);
-	free(command[0]);
 }
 
 // Give which command to execute and execute that.
@@ -274,7 +282,6 @@ void handle_line(char *str)
 
 	if (g_x->cmd_count == 0)
 		return ;
-	i = -1;
 	seperate_command(str);
 	status = 0;
 	if (g_x->cmd_count == 1)
@@ -287,6 +294,7 @@ void handle_line(char *str)
 	}
 	else
 	{
+		i = -1;
 		while (++i != g_x->cmd_count && g_x->cmd_count != 1)
 		{
 			redirect(i);

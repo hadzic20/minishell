@@ -52,6 +52,7 @@ int		ft_command_count(char *str);
 bool	expand_single(char *s, int *i, char **dst);
 char	*dollar(char* s, int* i);
 char    *quote(char *s, int *i);
+void	print_list(char **list);
 char    *double_quote(char *s, int *i);
 void	redirect(int i);
 int	redirect_input(char *str, int *i);

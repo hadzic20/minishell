@@ -12,6 +12,7 @@ void free_them_all_mf(void)
 	k = 0;
 	while (i < g_x->cmd_count)
 	{
+		print_list(g_x->cmds[i].handled_cmd);
 		free(g_x->cmds[i].raw_command);
 		k = 0; 
 		while (g_x->cmds[i].handled_cmd && g_x->cmds[i].handled_cmd[k])
@@ -42,18 +43,15 @@ int	main(int argc, char **argv, char **envp)
 		get_prompt();
 		line = readline(g_x->prompt);
 		if (!line)
-		{
 			handle_crtl_d();
-		}
-		if (line)
+		g_x->cmd_count = ft_command_count(line);
+		if (g_x->cmd_count != 0)
 		{
-			g_x->cmd_count = ft_command_count(line);
 			handle_line(line);
-			if (line[0] != '\0')
-				add_history(line);
-			//free(line);
+			add_history(line);
 			free_them_all_mf();
 		}
+		free(line);
 		free(g_x->prompt);
 	}
 }

@@ -66,7 +66,7 @@ char	*find_path(char *name)
 	
 	if (name[0] == '.' || name[0] == '/')
 		return (ft_strdup(name));
-	path = strjoin_free(ft_strdup("/"), name);
+	path = ft_strjoin("/", name);
 	i = 0;
 	j = -1;
 	while (++j < ft_str2len(g_x->export))
@@ -79,23 +79,23 @@ char	*find_path(char *name)
 		}
 	}
 	if (i == 0)
-		return (NULL);
+		return (free(path), NULL);
 	path_to_search = ft_split_free(str, ':');
 	i = -1;
 	str = NULL;
 	while (path_to_search[++i])
 	{
 		path_to_search[i] = strjoin_free(path_to_search[i], ft_strdup(path));
-		if (access(path_to_search[i], X_OK) != -1)
+		if (access(path_to_search[i], X_OK) == 0)
 		{
 			str = ft_strdup(path_to_search[i]);
 			ft_free(path_to_search);
-			return (str) ;
+			return (free(path), str);
 		}
 	}
 	print_error("minishell", "command not found", name);
 	ft_free(path_to_search);
-	return (str);
+	return (free(path), str);
 }
 
 // Bu kesin olarak exitliyor
