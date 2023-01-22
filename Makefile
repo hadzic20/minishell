@@ -6,11 +6,11 @@ BLUE		=	\033[34m
 RED			=	\033[31m
 
 D_CMD		=	handle_input.c   get_user_and_path.c   
-D_ERROR		=	error_func.c
+D_PARSE		=	parse/command.c	parse/dollar.c parse/line.c parse/quotes.c parse/signals.c
+D_ERROR		=	utils/error_func.c
 D_BUILTIN	=	builtin/builtin.c   builtin/export.c   builtin/unset_utils.c   builtin/export_utils_one.c   builtin/export_utils_two.c   builtin/unset.c 
-D_UTILS		=	free.c utils/utils_two.c    utils/utils.c
-D_REDIRECT	=	redirect.c
-D_TOKENIZE	=   dollar.c
+D_UTILS		=	utils/free.c utils/utils_two.c    utils/utils.c utils/is_and_skip.c
+D_REDIRECT	=	redirect/redirect.c redirect/heredoc.c
 D_MINISHELL	=	main.c
 
 
@@ -22,11 +22,11 @@ PLUSULTRA	=	@echo "$(YELLOW)!PLUS ULTRA ^^ !$(RESET)"
 
 NAME = minishell
 OBJ			=	$(D_CMD:%.c=%.o) \
+				$(D_PARSE:%.c=%.o) \
 				$(D_ERROR:%.c=%.o) \
 				$(D_UTILS:%.c=%.o) \
 				$(D_BUILTIN:%.c=%.o) \
 				$(D_REDIRECT:%.c=%.o) \
-				$(D_TOKENIZE:%.c=%.o) \
 				$(D_MINISHELL:%.c=%.o)
 
 

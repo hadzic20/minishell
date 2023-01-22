@@ -12,7 +12,6 @@ void free_them_all_mf(void)
 	k = 0;
 	while (i < g_x->cmd_count)
 	{
-		print_list(g_x->cmds[i].handled_cmd);
 		free(g_x->cmds[i].raw_command);
 		k = 0; 
 		while (g_x->cmds[i].handled_cmd && g_x->cmds[i].handled_cmd[k])
