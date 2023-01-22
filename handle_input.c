@@ -111,10 +111,9 @@ void	seperate_command(char *s)
 	current_quote = '\0';
 	i = -1;
 	j = 0;
-	g_x->cmds = (t_command *)malloc((ft_command_count(s) + 1) * \
-	sizeof(t_command));
-	while (++i <= ft_command_count(s))
-		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
+	g_x->cmds = malloc((g_x->cmd_count)*sizeof(t_command));
+	while (++i < g_x->cmd_count)
+		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s)), sizeof(char)); // malloc -> calloc
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -259,7 +258,7 @@ void handle_line_utils(int i, int save_fd, char *str)
 		close(save_fd);
 	}
 	close(g_x->cmds[i].p[0]);
-	if (i != ft_command_count(str) - 1)
+	if (i != g_x->cmd_count - 1)
 		dup2(g_x->cmds[i].p[1], 1);
 	close(g_x->cmds[i].p[1]);
 	handle_command_execution(i, true);
@@ -273,12 +272,12 @@ void handle_line(char *str)
 	int status;
 	int pid;
 
-	if (ft_command_count(str) == 0)
+	if (g_x->cmd_count == 0)
 		return ;
 	i = -1;
 	seperate_command(str);
 	status = 0;
-	if (ft_command_count(str) == 1)
+	if (g_x->cmd_count == 1)
 	{
 		redirect(0);
 		if (g_x->redirect_error == 0)
@@ -288,7 +287,7 @@ void handle_line(char *str)
 	}
 	else
 	{
-		while (g_x->cmds[++i].raw_command != NULL && ft_command_count(str) != 1)
+		while (++i != g_x->cmd_count && g_x->cmd_count != 1)
 		{
 			redirect(i);
 			if (g_x->redirect_error != 0)

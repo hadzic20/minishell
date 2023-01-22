@@ -30,6 +30,7 @@ typedef struct s_x
 {
 	int		error_code;
 	int		redirect_error;
+	int 	cmd_count;
 	char	**envp;
 	char	**export;
 	char	*prompt;

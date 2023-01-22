@@ -33,15 +33,15 @@ OBJ			=	$(D_CMD:%.c=%.o) \
 CC = @cc
 CFLAGS = -I lib -g #-Wall -Wextra -Werror -fsanitize=address -g
 RM = rm -rf
-LIB		= ./lib/.rdl
+#LIB		= ./lib/.rdl
 READLINE	= -L lib/readline	-lreadline -ltermcap
 
 
 all: $(LIB) $(NAME)
 
 
-$(LIB):
-	make -C ./lib
+#$(LIB):
+#	make -C ./lib
 
 
 $(NAME): $(OBJ)
