@@ -53,9 +53,10 @@ $(NAME): $(OBJ)
 
 
 
+# Renkleri kaldirdim cok uzur dilerim ama goremiyorum yoksa :(
 %.o: %.c
-			@printf "\033[0;30mGenerating minishell objects... %-33.33s\r" $@
-			@${CC} ${CFLAGS} -c $< -o $@
+			@#printf "\033[0;30mGenerating minishell objects... %-33.33s\r" $@
+			${CC} ${CFLAGS} -c $< -o $@
 
 clean:
 	make -C ./libft clean
