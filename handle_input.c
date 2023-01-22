@@ -80,7 +80,7 @@ char	**extract_command(char *s)
 	j = 0;
 	if (ft_word_count(s) == 0)
 		return (NULL);
-	command = ft_calloc((ft_word_count(s) + 1), sizeof(char *)); // malloc -> calloc
+	command = ft_calloc((g_x->cmd_count + 1), sizeof(char *)); // malloc -> calloc
 	i = -1;
 	while (++i <= ft_word_count(s))
 		command[i] = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
@@ -111,9 +111,9 @@ void	seperate_command(char *s)
 	current_quote = '\0';
 	i = -1;
 	j = 0;
-	g_x->cmds = malloc((g_x->cmd_count)*sizeof(t_command));
+	g_x->cmds = malloc((g_x->cmd_count + 1)*sizeof(t_command));
 	while (++i < g_x->cmd_count)
-		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s)), sizeof(char)); // malloc -> calloc
+		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
 	i = 0;
 	while (s[i] != '\0')
 	{

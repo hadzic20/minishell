@@ -8,8 +8,8 @@ void free_them_all_mf(void)
 	int	i;
 	int k;
 
-	
 	i = 0;
+	k = 0;
 	while (i < g_x->cmd_count)
 	{
 		free(g_x->cmds[i].raw_command);
@@ -25,8 +25,6 @@ void free_them_all_mf(void)
 		i++;
 	}
 	free(g_x->cmds);
-	//free(g_x->prompt);
-	//free(g_x);
 }
 
 
@@ -53,11 +51,9 @@ int	main(int argc, char **argv, char **envp)
 			handle_line(line);
 			if (line[0] != '\0')
 				add_history(line);
-			free(line);
+			//free(line);
 			free_them_all_mf();
 		}
 		free(g_x->prompt);
-		//free(g_x->cmds->raw_command);
-
 	}
 }

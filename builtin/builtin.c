@@ -89,7 +89,8 @@ char	*find_path(char *name)
 		if (access(path_to_search[i], X_OK) != -1)
 		{
 			str = ft_strdup(path_to_search[i]);
-			break ;
+			ft_free(path_to_search);
+			return (str) ;
 		}
 	}
 	print_error("minishell", "command not found", name);
