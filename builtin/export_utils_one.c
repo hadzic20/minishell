@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-t_x	*g_x;
-
 char	**storage_and_copy(char **env)
 {
 	int		i;
@@ -34,24 +32,24 @@ char	**storage_and_copy(char **env)
 	return (str);
 }
 
-char	**export_sorter(char **envp)
+char	**export_sorter(char **ev)
 {
 	int		i;
 	char	*tmp;
 
 	i = 0;
-	while (envp[i])
+	while (ev[i])
 	{
-		if (envp[i + 1] && ft_strncmp(envp[i], envp[i + 1], ft_strlen(envp[i]) + 1) > 0)
+		if (ev[i + 1] && ft_strncmp(ev[i], ev[i + 1], ft_strlen(ev[i]) + 1) > 0)
 		{
-			tmp = envp[i];
-			envp[i] = envp[i + 1];
-			envp[i + 1] = tmp;
+			tmp = ev[i];
+			ev[i] = ev[i + 1];
+			ev[i + 1] = tmp;
 			i = -1;
 		}
 		i++;
 	}
-	return (envp);
+	return (ev);
 }
 
 int	equal_finder(char *var)

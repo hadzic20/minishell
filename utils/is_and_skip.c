@@ -36,6 +36,8 @@ void	skip_spaces(char *s, int *i)
 void	skip_redirection(char *s, int *i)
 {
 	(*i)++;
+	if (s[*i] == '<' || s[*i] == '>')
+		(*i)++;
 	skip_spaces(s, i);
 	while (s[*i] != '\0' && !ft_isspace(s[*i]) && s[*i] != '|')
 		(*i)++;

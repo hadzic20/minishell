@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:23:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:26:25 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 02:53:21 by amillahadzi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ char	**extract_command(char *s)
 {
 	int		i;
 	int		j;
+	int		check;
 	char	**command;
 	int		len;
 
 	j = 0;
+	check = 0;
 	if (ft_word_count(s) == 0)
 		return (NULL);
 	command = malloc(1 * sizeof(char *));
@@ -31,7 +33,7 @@ char	**extract_command(char *s)
 		skip_spaces(s, &i);
 		if (s[i] == '\0')
 			break ;
-		if (len <= j)
+		if (len <= j && check == 0)
 		{
 			command = ft_rrealloc(command, j + 1);
 			command[j] = malloc(ft_strlen(s) * sizeof(char));
@@ -41,8 +43,11 @@ char	**extract_command(char *s)
 		}
 		if (!expand_single(s, &i, &command[j]))
 			continue ;
+		check = 1;
 		if (ft_isspace(s[i]) || s[i] == '\0')
 			j++;
+		if (ft_isspace(s[i]) || s[i] == '\0')
+			check = 0;
 	}
 	if (command[j])
 		free(command[j]);
@@ -69,10 +74,7 @@ void	seperate_command(char *s)
 		k = 0;
 		while (s[i] != '\0' && (s[i] != '|' || current_quote != '\0'))
 		{
-			if (current_quote == '\0' && (s[i] == '"' || s[i] == '\''))
-				current_quote = s[i];
-			else if (current_quote != '\0' && s[i] == current_quote)
-				current_quote = '\0';
+			the_quotes(&current_quote, s, i);
 			g_x->cmds[j].raw_command[k++] = s[i++];
 		}
 		g_x->cmds[j].raw_command[k] = '\0';
@@ -82,14 +84,22 @@ void	seperate_command(char *s)
 	}
 }
 
-void	ft_exit(char **command)
+void	select_function(char **command, int outfd)
 {
-	int	status;
-
-	status = 0;
-	if (command[0] != NULL && command[1] != NULL)
-		status = ft_atoi(command[1]);
-	exit(status);
+	if (ft_strncmp(command[0], "cd", 3) == 0)
+		ft_change_dir(command[1]);
+	else if (ft_strncmp(command[0], "pwd", 4) == 0)
+		mini_pwd(outfd);
+	else if (ft_strncmp(command[0], "env", 4) == 0)
+		mini_env(outfd);
+	else if (ft_strncmp(command[0], "echo", 5) == 0)
+		mini_echo(command, outfd);
+	else if (ft_strncmp(command[0], "export", 7) == 0)
+		ft_export(command, outfd);
+	else if (ft_strncmp(command[0], "unset", 6) == 0)
+		ft_unset(command);
+	else if (ft_strncmp(command[0], "exit", 5) == 0)
+		ft_exit(command);
 }
 
 void	handle_command(char **command, int outfd, int infd, bool is_in_fork)
@@ -99,27 +109,19 @@ void	handle_command(char **command, int outfd, int infd, bool is_in_fork)
 
 	if (command == NULL)
 		return ;
-	if (ft_strncmp(command[0], "cd", sizeof("cd")) == 0)
-		ft_change_dir(command[1]);
-	else if (ft_strncmp(command[0], "pwd", sizeof("pwd")) == 0)
-		mini_pwd(outfd);
-	else if (ft_strncmp(command[0], "env", sizeof("env")) == 0)
-		mini_env(outfd);
-	else if (ft_strncmp(command[0], "echo", sizeof("echo")) == 0)
-		mini_echo(command, outfd);
-	else if (ft_strncmp(command[0], "export", sizeof("export")) == 0)
-		ft_export(command, outfd);
-	else if (ft_strncmp(command[0], "unset", sizeof("unset")) == 0)
-		ft_unset(command);
-	else if (ft_strncmp(command[0], "exit", sizeof("exit")) == 0)
-		ft_exit(command);
+	if (ft_strncmp(command[0], "cd", 3) == 0
+		|| ft_strncmp(command[0], "pwd", 4) == 0
+		|| ft_strncmp(command[0], "env", 4) == 0
+		|| ft_strncmp(command[0], "echo", 5) == 0
+		|| ft_strncmp(command[0], "export", 7) == 0
+		|| ft_strncmp(command[0], "unset", 6) == 0
+		|| ft_strncmp(command[0], "exit", 5) == 0)
+		select_function(command, outfd);
 	else if (!is_in_fork)
 	{
 		pid = fork();
 		if (pid == 0)
-		{
 			mini_pathed(command, outfd, infd);
-		}
 		status = 0;
 		waitpid(pid, &status, 0);
 		g_x->error_code = WEXITSTATUS(status);

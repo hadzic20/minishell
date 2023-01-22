@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:32:55 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:35:07 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 02:56:58 by amillahadzi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct s_export_vars
 
 extern t_x	*g_x;
 
+void	ft_exit(char **command);
+void	the_quotes(char *current_quote, char *s, int i);
 bool	ft_isspace(char c);
 bool	is_metachar(char c);
 void	skip_spaces(char *s, int *i);

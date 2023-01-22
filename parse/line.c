@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:22:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:26:16 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 02:51:21 by amillahadzi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ void	handle_line(char *str)
 
 	if (g_x->cmd_count == 0)
 		return ;
-	seperate_command(str);
 	status = 0;
+	seperate_command(str);
 	if (g_x->cmd_count == 1)
 	{
 		redirect(0);

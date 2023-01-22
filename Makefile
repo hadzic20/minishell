@@ -5,7 +5,7 @@ YELLOW		=	\033[33m
 BLUE		=	\033[34m
 RED			=	\033[31m
 
-D_PROMPT	=	prompt/get_user_and_path.c   
+D_PROMPT	=	prompt/get_user_and_path.c
 D_PARSE		=	parse/command.c	parse/dollar.c parse/line.c parse/quotes.c parse/signals.c
 D_ERROR		=	utils/error_func.c
 D_BUILTIN	=	builtin/builtin.c   builtin/export.c   builtin/unset_utils.c   builtin/export_utils_one.c   builtin/export_utils_two.c   builtin/unset.c builtin/pathed.c

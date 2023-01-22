@@ -6,23 +6,19 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:17:11 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:17:51 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 02:27:33 by amillahadzi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*find_path(char *name)
+char	*get_path_from_env(void)
 {
-	char	*path;
-	char	**path_to_search;
-	char	*str;
 	int		i;
 	int		j;
+	char	**path_to_search;
+	char	*str;
 
-	if (name[0] == '.' || name[0] == '/')
-		return (ft_strdup(name));
-	path = ft_strjoin("/", name);
 	i = 0;
 	j = -1;
 	while (++j < ft_str2len(g_x->export))
@@ -35,10 +31,15 @@ char	*find_path(char *name)
 		}
 	}
 	if (i == 0)
-		return (free(path), NULL);
-	path_to_search = ft_split_free(str, ':');
-	i = -1;
-	str = NULL;
+		return (NULL);
+	return (str);
+}
+
+char	*executable_path(char **path_to_search, char *path)
+{
+	int		i;
+	char	*str;
+
 	while (path_to_search[++i])
 	{
 		path_to_search[i] = strjoin_free(path_to_search[i], ft_strdup(path));
@@ -49,6 +50,25 @@ char	*find_path(char *name)
 			return (free(path), str);
 		}
 	}
+	return (NULL);
+}
+
+char	*find_path(char *name)
+{
+	char	*path;
+	char	**path_to_search;
+	char	*str;
+
+	if (name[0] == '.' || name[0] == '/')
+		return (ft_strdup(name));
+	path = ft_strjoin("/", name);
+	str = get_path_from_env();
+	if (str == NULL)
+		return (free(path), NULL);
+	path_to_search = ft_split_free(str, ':');
+	str = executable_path(path_to_search, path);
+	if (str)
+		return (str);
 	print_error("minishell", "command not found", name);
 	ft_free(path_to_search);
 	return (free(path), str);

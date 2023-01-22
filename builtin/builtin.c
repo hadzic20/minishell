@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:15:53 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:16:54 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 02:42:57 by amillahadzi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ int	ft_change_dir(char *path)
 		}
 	}
 	return (1);
+}
+
+void	ft_exit(char **command)
+{
+	int	status;
+
+	status = 0;
+	if (command[0] != NULL && command[1] != NULL)
+		status = ft_atoi(command[1]);
+	exit(status);
 }
 
 int	mini_pwd(int fd)
