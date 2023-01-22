@@ -1,19 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 19:57:16 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:28:32 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_x	*g_x;
 
-
-void free_them_all_mf(void)
+void	free_them_all_mf(void)
 {
 	int	i;
-	int k;
+	int	k;
 
 	i = 0;
 	k = 0;
 	while (i < g_x->cmd_count)
 	{
 		free(g_x->cmds[i].raw_command);
-		k = 0; 
+		k = 0;
 		while (g_x->cmds[i].handled_cmd && g_x->cmds[i].handled_cmd[k])
 		{
 			if (g_x->cmds)
@@ -26,7 +37,6 @@ void free_them_all_mf(void)
 	}
 	free(g_x->cmds);
 }
-
 
 int	main(int argc, char **argv, char **envp)
 {

@@ -42,6 +42,9 @@
     "ioctl.h": "c",
     "ios": "c",
     "ostream": "c",
-    "system_error": "c"
+    "system_error": "c",
+    "minishell.h": "c",
+    "dirent.h": "c",
+    "readline.h": "c"
   }
 }

@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils_two.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:12:25 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:12:27 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include"../minishell.h"
 
-// var is like ahmet=mehmet
-// There is no env variable with name ahmet
 void	export_add_var_equal(t_export_vars *exp, char *var)
 {
 	g_x->export = ft_rrealloc(g_x->export, ft_str2len(g_x->export) + 2);
@@ -10,9 +20,6 @@ void	export_add_var_equal(t_export_vars *exp, char *var)
 	g_x->export = export_sorter(g_x->export);
 }
 
-// var is in format ahmet=mehmet
-// There is already an env variable named ahmet. Just update it
-// TODO: Export içinde buralarda envp var nedense, export tekrar çalışmalı tam olarak
 int	export_add_var_body_helper(t_export_vars *exp, char *var)
 {
 	if (equal_finder(g_x->export[exp->i]) == 1 && equal_finder(var) == 0)
@@ -60,7 +67,6 @@ void	exprt_addvar_mini_help(t_export_vars *exp, int *env_ctrl, \
 	}
 }
 
-// No equals
 int	export_add_var_helper(t_export_vars *exp, char *var)
 {
 	free(exp->env_name);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:27:08 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:27:33 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	**ft_split_free(char *str, char c)
@@ -27,4 +39,3 @@ char	*strjoin_free(char *a, char *b)
 	free(b);
 	return (new);
 }
-

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   line.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:22:04 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:26:16 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void handle_line_utils(int i, int save_fd, char *str)
+void	handle_line_utils(int i, int save_fd, char *str)
 {
 	if (i != 0)
 	{
@@ -14,13 +26,13 @@ void handle_line_utils(int i, int save_fd, char *str)
 	handle_command_execution(i, true);
 }
 
-void handle_line(char *str)
+void	handle_line(char *str)
 {
-	int i;
-	int save_fd;
-	int last_pid;
-	int status;
-	int pid;
+	int	i;
+	int	save_fd;
+	int	last_pid;
+	int	status;
+	int	pid;
 
 	if (g_x->cmd_count == 0)
 		return ;
@@ -52,7 +64,6 @@ void handle_line(char *str)
 			if (pid == 0)
 			{
 				handle_line_utils(i, save_fd, str);
-				// Eğer bir builtinse ve hata yoksa buraya kod gelebilir...
 				exit(g_x->error_code);
 			}
 			close(g_x->cmds[i].p[1]);
@@ -67,4 +78,30 @@ void handle_line(char *str)
 	}
 	while (waitpid(-1, &status, 0) != -1)
 		;
+}
+
+bool	expand_single(char *s, int *i, char **dst)
+{
+	int		k;
+
+	if (s[*i] == '"')
+		*dst = strjoin_free(*dst, double_quote(s, i));
+	else if (s[*i] == '\'')
+		*dst = strjoin_free(*dst, quote(s, i));
+	else if (s[*i] == '$')
+		*dst = strjoin_free(*dst, dollar(s, i));
+	else if (s[*i] == '<' || s[*i] == '>')
+	{
+		skip_redirection(s, i);
+		return (false);
+	}
+	else
+	{
+		k = ft_strlen(*dst);
+		*dst = strjoin_free(*dst, ft_strdup(s));
+		while (s[*i] != '\0' && !is_metachar(s[*i]) && !ft_isspace(s[*i]))
+			(*dst)[k++] = s[(*i)++];
+		(*dst)[k] = '\0';
+	}
+	return (true);
 }

@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:15:53 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:16:54 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-#include <errno.h>
-#include <err.h>
 
 int	ft_change_dir(char *path)
 {
@@ -52,73 +62,6 @@ void	mini_env(int fd)
 		write(fd, g_x->export[i], ft_strlen(g_x->export[i]));
 		write(fd, "\n", 1);
 	}
-	//write(fd, "_=/usr/bin/env\n", 15);
-}
-
-// Memory leakler var
-char	*find_path(char *name)
-{
-	char *path;
-	char **path_to_search;
-	char *str;
-	int	i;
-	int j;
-	
-	if (name[0] == '.' || name[0] == '/')
-		return (ft_strdup(name));
-	path = ft_strjoin("/", name);
-	i = 0;
-	j = -1;
-	while (++j < ft_str2len(g_x->export))
-	{
-		if (ft_strncmp(g_x->export[j], "PATH=", 5) == 0)
-		{
-			str = ft_substr(g_x->export[j], 5, ft_strlen(g_x->export[j]));
-			i = 1;
-			break ;
-		}
-	}
-	if (i == 0)
-		return (free(path), NULL);
-	path_to_search = ft_split_free(str, ':');
-	i = -1;
-	str = NULL;
-	while (path_to_search[++i])
-	{
-		path_to_search[i] = strjoin_free(path_to_search[i], ft_strdup(path));
-		if (access(path_to_search[i], X_OK) == 0)
-		{
-			str = ft_strdup(path_to_search[i]);
-			ft_free(path_to_search);
-			return (free(path), str);
-		}
-	}
-	print_error("minishell", "command not found", name);
-	ft_free(path_to_search);
-	return (free(path), str);
-}
-
-// Bu kesin olarak exitliyor
-void	mini_pathed(char **command, int outfile, int infile)
-{
-	char	*path;
-
-	path = find_path(command[0]);
-	if (path == NULL)
-		exit(127);
-	if (outfile > 1)
-		dup2(outfile, 1);
-	if (outfile > 1)
-		close(outfile);
-	if (infile > 0)
-		dup2(infile, 0);
-	if (infile > 0)
-		close(infile);
-	execve(path, command, g_x->export);
-	perror("execve error");
-	if (errno == 13)
-		exit(126);
-	exit(127);
 }
 
 void	mini_echo(char **parse, int fd)

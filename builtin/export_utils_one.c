@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils_one.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:12:54 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:13:24 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-t_x *g_x;
+t_x	*g_x;
 
 char	**storage_and_copy(char **env)
 {
@@ -55,7 +67,6 @@ int	equal_finder(char *var)
 	return (0);
 }
 
-// ahmet=mehmet ->  ahmet
 char	*env_name_getter(char *var)
 {
 	int		i;

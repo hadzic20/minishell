@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:23:04 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:26:25 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	**extract_command(char *s)
 {
 	int		i;
-	int 	j;
+	int		j;
 	char	**command;
 	int		len;
 
@@ -40,17 +52,17 @@ char	**extract_command(char *s)
 
 void	seperate_command(char *s)
 {
-	int	i;
-	int	j;
-	int	k;
+	int		i;
+	int		j;
+	int		k;
 	char	current_quote;
 
 	current_quote = '\0';
 	i = -1;
 	j = 0;
-	g_x->cmds = malloc((g_x->cmd_count)*sizeof(t_command));
+	g_x->cmds = malloc((g_x->cmd_count) * sizeof(t_command));
 	while (++i < g_x->cmd_count)
-		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char)); // malloc -> calloc
+		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char));
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -80,7 +92,7 @@ void	ft_exit(char **command)
 	exit(status);
 }
 
-void handle_command(char **command, int outfd, int infd, bool is_in_fork)
+void	handle_command(char **command, int outfd, int infd, bool is_in_fork)
 {
 	int	pid;
 	int	status;
@@ -120,33 +132,6 @@ void	handle_command_execution(int i, bool is_in_fork)
 {
 	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
 	g_x->error_code = 0;
-
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
 		g_x->cmds[i].infile, is_in_fork);
-}
-
-bool	expand_single(char *s, int *i, char **dst)
-{
-	int		k;
-
-	if (s[*i] == '"')
-		*dst = strjoin_free(*dst, double_quote(s, i)); // leak yok???
-	else if (s[*i] == '\'')
-		*dst = strjoin_free(*dst, quote(s, i)); // bunda da leak yok. dolarda neden var?
-	else if (s[*i] == '$')
-		*dst = strjoin_free(*dst, dollar(s, i)); // leak ama neden?
-	else if (s[*i] == '<' || s[*i] == '>')
-	{
-		skip_redirection(s, i);
-		return (false);
-	}
-	else
-	{
-		k = ft_strlen(*dst);
-		*dst = strjoin_free(*dst, ft_strdup(s));
-		while (s[*i] != '\0' && !is_metachar(s[*i]) && !ft_isspace(s[*i]))
-			(*dst)[k++] = s[(*i)++];
-		(*dst)[k] = '\0';
-	}
-	return (true);
 }

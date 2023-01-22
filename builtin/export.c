@@ -1,8 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 20:15:06 by amillahadzi       #+#    #+#             */
+/*   Updated: 2023/01/22 20:15:07 by amillahadzi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include"../minishell.h"
 
-// var is ahmet=mehmet
-// exp->tmp is ahmet
-// If this returns true, parent returns
 int	export_add_var_body(t_export_vars *exp, char *var)
 {
 	exp->env_name = env_name_getter(g_x->export[exp->i]);
@@ -15,8 +24,6 @@ int	export_add_var_body(t_export_vars *exp, char *var)
 	return (0);
 }
 
-// ahmet=mehmet
-// The set or update function
 void	export_add_variable(char *var)
 {
 	t_export_vars	exp;
@@ -28,7 +35,6 @@ void	export_add_variable(char *var)
 		if (export_add_var_body(&exp, var))
 			return ;
 	}
-	// exportun uzunlugu
 	free(exp.tmp);
 	if (equal_finder(var) == 1)
 		export_add_var_equal(&exp, var);
@@ -48,18 +54,15 @@ void	export_display(int i, int fd)
 
 	env_name = env_name_getter(g_x->export[i]);
 	value = env_getter(g_x->export[i]);
-    write(fd, "declare -x ", 11);
-    ft_putstr_fd(env_name, fd);
-    write(fd, "=\"", 3);
-    ft_putstr_fd(value, fd);
-    write(fd, "\"\n", 3);
-	//printf("declare -x %s=\"%s\"\n", env_name, value);
+	write(fd, "declare -x ", 11);
+	ft_putstr_fd(env_name, fd);
+	write(fd, "=\"", 3);
+	ft_putstr_fd(value, fd);
+	write(fd, "\"\n", 3);
 	free(env_name);
 	free(value);
 }
 
-// parse is the argv
-// export a=123 b=234
 void	export_ctrl_and_add_var(char **parse)
 {
 	int	i;
