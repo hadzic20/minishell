@@ -17,22 +17,12 @@ t_x	*g_x;
 void	free_them_all_mf(void)
 {
 	int	i;
-	int	k;
 
 	i = 0;
-	k = 0;
 	while (i < g_x->cmd_count)
 	{
 		free(g_x->cmds[i].raw_command);
-		k = 0;
-		while (g_x->cmds[i].handled_cmd && g_x->cmds[i].handled_cmd[k])
-		{
-			if (g_x->cmds)
-				free(g_x->cmds[i].handled_cmd[k]);
-			k++;
-		}
-		if (g_x->cmds[i].handled_cmd)
-			free(g_x->cmds[i].handled_cmd);
+		ft_free(g_x->cmds[i].handled_cmd);
 		i++;
 	}
 	free(g_x->cmds);
