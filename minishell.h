@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:32:55 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 15:25:33 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 16:38:13 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_export_vars
 extern t_x	*g_x;
 
 void	ft_exit(char **command);
+void	execute_command(t_command *cmd, bool is_in_fork);
 void	the_quotes(char *current_quote, char *s, int i);
 bool	ft_isspace(char c);
 bool	is_metachar(char c);
@@ -73,16 +74,16 @@ void	skip_redirections(char *s, int *i);
 char	*expand_redirect(char *s, int *i);
 char	*expand_arg(char *s, int *i);
 void	seperate_command(char *s);
-void	handle_command_execution(int i, bool is_in_fork);
 void	expand_single(char *s, int *i, char **dst);
 char	*dollar(char *s, int *i);
 char	*quote(char *s, int *i);
 void	print_list(char **list);
 char	*double_quote(char *s, int *i);
-void	redirect(int i);
+bool	redirect(t_command *cmd);
 int		redirect_input(char *str, int *i);
 int		redirect_output(char *str, int *i, bool is_append);
 int		heredoc(char *str, int *i);
+void	handle_pipe(void);
 int		ft_change_dir(char *path);
 void	handle_line(char *str);
 void	handle_crtl_d(void);
