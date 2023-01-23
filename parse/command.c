@@ -6,11 +6,33 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:23:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 15:49:44 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 16:28:00 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// Expand quote, dquote, dollar or word UNTIL it sees a
+// ft_isspace, 
+void	expand_single(char *s, int *i, char **dst)
+{
+	int		k;
+
+	if (s[*i] == '"')
+		*dst = strjoin_free(*dst, double_quote(s, i));
+	else if (s[*i] == '\'')
+		*dst = strjoin_free(*dst, quote(s, i));
+	else if (s[*i] == '$')
+		*dst = strjoin_free(*dst, dollar(s, i));
+	else
+	{
+		k = ft_strlen(*dst);
+		*dst = strjoin_free(*dst, ft_strdup(s));
+		while (s[*i] != '\0' && !is_metachar(s[*i]) && !ft_isspace(s[*i]))
+			(*dst)[k++] = s[(*i)++];
+		(*dst)[k] = '\0';
+	}
+}
 
 // Expand single argument
 // It has to start from a char and end with
@@ -103,60 +125,4 @@ void	seperate_command(char *s)
 			i++;
 		j++;
 	}
-}
-
-void	select_function(char **command, int outfd)
-{
-	if (ft_strncmp(command[0], "cd", 3) == 0)
-		ft_change_dir(command[1]);
-	else if (ft_strncmp(command[0], "pwd", 4) == 0)
-		mini_pwd(outfd);
-	else if (ft_strncmp(command[0], "env", 4) == 0)
-		mini_env(outfd);
-	else if (ft_strncmp(command[0], "echo", 5) == 0)
-		mini_echo(command, outfd);
-	else if (ft_strncmp(command[0], "export", 7) == 0)
-		ft_export(command, outfd);
-	else if (ft_strncmp(command[0], "unset", 6) == 0)
-		ft_unset(command);
-	else if (ft_strncmp(command[0], "exit", 5) == 0)
-		ft_exit(command);
-}
-
-void	handle_command(char **command, int outfd, int infd, bool is_in_fork)
-{
-	int	pid;
-	int	status;
-
-	if (command == NULL)
-		return ;
-	if (ft_strncmp(command[0], "cd", 3) == 0
-		|| ft_strncmp(command[0], "pwd", 4) == 0
-		|| ft_strncmp(command[0], "env", 4) == 0
-		|| ft_strncmp(command[0], "echo", 5) == 0
-		|| ft_strncmp(command[0], "export", 7) == 0
-		|| ft_strncmp(command[0], "unset", 6) == 0
-		|| ft_strncmp(command[0], "exit", 5) == 0)
-		select_function(command, outfd);
-	else if (!is_in_fork)
-	{
-		pid = fork();
-		if (pid == 0)
-			mini_pathed(command, outfd, infd);
-		status = 0;
-		waitpid(pid, &status, 0);
-		g_x->error_code = WEXITSTATUS(status);
-	}
-	else
-		mini_pathed(command, outfd, infd);
-}
-
-void	handle_command_execution(int i, bool is_in_fork)
-{
-	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
-	g_x->error_code = 0;
-	if (g_x->cmds[i].handled_cmd[0] == NULL)
-		return ;
-	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
-		g_x->cmds[i].infile, is_in_fork);
 }

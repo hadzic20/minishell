@@ -6,39 +6,48 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:09:00 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 15:47:47 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 16:25:04 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redirect(int cmd_index)
+/*
+ * Just sets the cmd.infile and cmd.outfile fields.
+ * 
+ * Only if it sees any errors, it sets the g_x->error_code
+ * field.
+ * Returns false on any error
+ * TODO: See if you can remove that return(true) line
+ */
+bool	redirect(t_command *cmd)
 {
-	char	*cmd;
 	int		i;
 
-	cmd = g_x->cmds[cmd_index].raw_command;
-	g_x->cmds[cmd_index].infile = 0;
-	g_x->cmds[cmd_index].outfile = 0;
-	i = 0;
+	cmd->infile = 0;
+	cmd->outfile = 1;
 	g_x->redirect_error = 0;
-	while (cmd[i] != '\0' && g_x->redirect_error == 0)
+	i = 0;
+	while (cmd->raw_command[i] != '\0' && g_x->redirect_error == 0)
 	{
-		if (cmd[i] == '\"' || cmd[i] == '\'')
-			skip_quote(cmd, &i);
-		if (cmd[i] == '\0')
-			return ;
-		if (cmd[i] == '>' && cmd[i + 1] == '>')
-			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, true);
-		else if (cmd[i] == '>')
-			g_x->cmds[cmd_index].outfile = redirect_output(cmd, &i, false);
-		else if (cmd[i] == '<' && cmd[i + 1] == '<')
-			g_x->cmds[cmd_index].infile = heredoc(cmd, &i);
-		else if (cmd[i] == '<')
-			g_x->cmds[cmd_index].infile = redirect_input(cmd, &i);
-		if (cmd[i] != '\0')
+		if (cmd->raw_command[i] == '\"' || cmd->raw_command[i] == '\'')
+			skip_quote(cmd->raw_command, &i);
+		if (cmd->raw_command[i] == '\0')
+			return (true);
+		if (cmd->raw_command[i] == '>' && cmd->raw_command[i + 1] == '>')
+			cmd->outfile = redirect_output(cmd->raw_command, &i, true);
+		else if (cmd->raw_command[i] == '>')
+			cmd->outfile = redirect_output(cmd->raw_command, &i, false);
+		else if (cmd->raw_command[i] == '<' && cmd->raw_command[i + 1] == '<')
+			cmd->infile = heredoc(cmd->raw_command, &i);
+		else if (cmd->raw_command[i] == '<')
+			cmd->infile = redirect_input(cmd->raw_command, &i);
+		if (cmd->raw_command[i] != '\0')
 			i++;
 	}
+	if (g_x->redirect_error != 0)
+		g_x->error_code = g_x->redirect_error;
+	return (g_x->redirect_error == 0);
 }
 
 int	redirect_input(char *str, int *i)
