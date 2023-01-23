@@ -9,8 +9,8 @@ D_PROMPT	=	prompt/get_user_and_path.c
 D_PARSE		=	parse/command.c	parse/dollar.c parse/line.c parse/quotes.c parse/signals.c
 D_ERROR		=	utils/error_func.c
 D_BUILTIN	=	builtin/builtin.c   builtin/export.c   builtin/unset_utils.c   builtin/export_utils_one.c   builtin/export_utils_two.c   builtin/unset.c builtin/pathed.c
-D_UTILS		=	utils/free.c utils/utils_two.c    utils/utils.c utils/is_and_skip.c
-D_REDIRECT	=	redirect/redirect.c redirect/heredoc.c
+D_UTILS		=	utils/free.c utils/utils_two.c utils/utils.c utils/is.c utils/skip.c
+D_REDIRECT	=	redirect/redirect.c redirect/heredoc.c redirect/expand_redirect.c
 D_MINISHELL	=	main.c
 
 
