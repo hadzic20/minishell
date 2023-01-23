@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:27:14 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:27:15 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 14:54:15 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,13 @@ int	ft_str2len(char **str2)
 	while (str2[i])
 		i++;
 	return (i);
+}
+
+void	print_list(char **list)
+{
+	int	i;
+
+	i = 0;
+	while (list[i] != NULL)
+		printf("> %s\n", list[i++]);
 }
