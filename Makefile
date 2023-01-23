@@ -31,7 +31,8 @@ OBJ			=	$(D_PROMPT:%.c=%.o) \
 
 
 CC = @cc
-CFLAGS = -I lib -Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS = -I lib -Wall -Wextra -Werror
+# CFLAGS = -I lib -Wall -Wextra -Werror -fsanitize=address -g
 RM = rm -rf
 #LIB		= ./lib/.rdl
 READLINE	= -L lib/readline	-lreadline -ltermcap
