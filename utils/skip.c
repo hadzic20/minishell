@@ -24,6 +24,15 @@ void	skip_redirection(char *s, int *i)
 	skip_arg(s, i);
 }
 
+void	skip_redirections(char *s, int *i)
+{
+	while (s[*i] == '<' || s[*i] == '>' || ft_isspace(s[*i]))
+	{
+		skip_spaces(s, i);
+		skip_redirection(s, i);
+	}
+}
+
 void	skip_quote(char *s, int *i)
 {
 	char	quote;
