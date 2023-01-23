@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:17:11 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 13:55:56 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 16:09:09 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ char	*find_path(char *name)
 	return (free(path), str);
 }
 
+/*
+ * This has to be forked before being called
+ */
 void	mini_pathed(char **command, int outfile, int infile)
 {
 	char	*path;
