@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	handle_line_utils(int i, int save_fd, char *str)
+void	handle_line_utils(int i, int save_fd)
 {
 	if (i != 0)
 	{
