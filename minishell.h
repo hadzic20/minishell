@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:32:55 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 02:56:58 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 14:05:53 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,18 @@ void	skip_spaces(char *s, int *i);
 void	skip_redirection(char *s, int *i);
 void	skip_quote(char *s, int *i);
 int		ft_command_count(char *str);
+bool	is_seperator(char c);
+void	skip_redirections(char *s, int *i);
+char	*expand_redirect(char *s, int *i);
+char	*expand_arg(char *s, int *i);
 void	seperate_command(char *s);
 void	handle_command_execution(int i, bool is_in_fork);
-bool	expand_single(char *s, int *i, char **dst);
+void	expand_single(char *s, int *i, char **dst);
 char	*dollar(char *s, int *i);
 char	*quote(char *s, int *i);
 void	print_list(char **list);
 char	*double_quote(char *s, int *i);
 void	redirect(int i);
-char	*redirect_path(char *s, int *i);
 int		redirect_input(char *str, int *i);
 int		redirect_output(char *str, int *i, bool is_append);
 int		heredoc(char *str, int *i);
