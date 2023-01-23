@@ -63,7 +63,7 @@ void	handle_line(char *str)
 			last_pid = pid;
 			if (pid == 0)
 			{
-				handle_line_utils(i, save_fd, str);
+				handle_line_utils(i, save_fd);
 				exit(g_x->error_code);
 			}
 			close(g_x->cmds[i].p[1]);
