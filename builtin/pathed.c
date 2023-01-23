@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:17:11 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 02:27:33 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 13:55:56 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	*get_path_from_env(void)
 {
 	int		i;
 	int		j;
-	char	**path_to_search;
 	char	*str;
 
 	i = 0;
@@ -40,6 +39,7 @@ char	*executable_path(char **path_to_search, char *path)
 	int		i;
 	char	*str;
 
+	i = -1;
 	while (path_to_search[++i])
 	{
 		path_to_search[i] = strjoin_free(path_to_search[i], ft_strdup(path));
