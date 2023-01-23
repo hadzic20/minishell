@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:32:55 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 14:05:53 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 15:25:33 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ void	handle_crtl_d(void);
 void	handle_signal(int signum);
 void	print_error(char *shell, char *cmd, char*str);
 char	**extract_command(char *str);
-char	**extract_commands(char *s);
 void	handle_command(char **command, int outfd, int infd, bool is_in_fork);
 void	mini_echo(char **parse, int fd);
 int		ft_strcmp(const char *s1, const char *s2);
