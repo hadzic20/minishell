@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:09:00 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 14:07:37 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 15:47:47 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	redirect_input(char *str, int *i)
 	if (!path)
 		return (-1);
 	file = open(path, O_RDONLY, 0777);
+	free(path);
 	if (file == -1)
 	{
 		perror("error opening file");

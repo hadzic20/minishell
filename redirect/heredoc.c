@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:10:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 14:06:39 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 15:47:07 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,11 @@ int	heredoc(char *str, int *i)
 		return (-1);
 	readline_dup = dup(0);
 	if (pipe(fds) == -1)
-		return (-1);
+		return (free(file), -1);
 	mem_handler = signal(SIGINT, heredoc_handler);
 	heredoc_loop(file, fds[1]);
 	signal(SIGINT, mem_handler);
+	free(file);
 	dup2(readline_dup, 0);
 	close(readline_dup);
 	close(fds[1]);
