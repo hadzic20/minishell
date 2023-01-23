@@ -6,53 +6,74 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:23:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 02:53:21 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 15:08:06 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+// Expand single argument
+// It has to start from a char and end with
+// a seperator
+char	*expand_arg(char *s, int *i)
+{
+	char	*final;
+
+	skip_redirections(s, i);
+	if (s[*i] == '\0' || s[*i] == '|')
+		return (NULL);
+	final = ft_strdup("");
+	while (s[*i] != '\0')
+	{
+		expand_single(s, i, &final);
+		if (is_seperator(s[*i]))
+			break ;
+	}
+	return (final);
+}
+
+char	**append_list(char **list, char *str)
+{
+	int		old_len;
+	char	**new;
+	int		i;
+
+	old_len = 0;
+	while (list[old_len])
+		old_len++;
+	new = malloc((old_len + 2) * sizeof(char *));
+	i = 0;
+	while (list[i] != NULL)
+	{
+		new[i] = ft_strdup(list[i]);
+		free(list[i]);
+		i++;
+	}
+	free(list);
+	new[old_len] = str;
+	new[old_len + 1] = NULL;
+	return (new);
+}
+
+// Split the command to args, skip redirections
 char	**extract_command(char *s)
 {
+	char	**args;
 	int		i;
-	int		j;
-	int		check;
-	char	**command;
-	int		len;
+	char	*str;
 
-	j = 0;
-	check = 0;
-	if (ft_word_count(s) == 0)
-		return (NULL);
-	command = malloc(1 * sizeof(char *));
-	command[0] = NULL;
+	args = malloc(sizeof(char *));
+	args[0] = NULL;
 	i = 0;
-	len = 0;
-	while (s[i] != '\0')
+	while (true)
 	{
-		skip_spaces(s, &i);
-		if (s[i] == '\0')
+		skip_redirections(s, &i);
+		str = expand_arg(s, &i);
+		if (str == NULL)
 			break ;
-		if (len <= j && check == 0)
-		{
-			command = ft_rrealloc(command, j + 1);
-			command[j] = malloc(ft_strlen(s) * sizeof(char));
-			command[j][0] = '\0';
-			command[j + 1] = NULL;
-			len = j;
-		}
-		if (!expand_single(s, &i, &command[j]))
-			continue ;
-		check = 1;
-		if (ft_isspace(s[i]) || s[i] == '\0')
-			j++;
-		if (ft_isspace(s[i]) || s[i] == '\0')
-			check = 0;
+		args = append_list(args, str);
 	}
-	if (command[j])
-		free(command[j]);
-	command[j] = NULL;
-	return (command);
+	return (args);
 }
 
 void	seperate_command(char *s)

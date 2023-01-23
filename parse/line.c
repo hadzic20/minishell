@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:22:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 02:51:21 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 15:11:55 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,9 @@ void	handle_line(char *str)
 		;
 }
 
-bool	expand_single(char *s, int *i, char **dst)
+// Expand quote, dquote, dollar or word UNTIL it sees a
+// ft_isspace, 
+void	expand_single(char *s, int *i, char **dst)
 {
 	int		k;
 
@@ -90,11 +92,6 @@ bool	expand_single(char *s, int *i, char **dst)
 		*dst = strjoin_free(*dst, quote(s, i));
 	else if (s[*i] == '$')
 		*dst = strjoin_free(*dst, dollar(s, i));
-	else if (s[*i] == '<' || s[*i] == '>')
-	{
-		skip_redirection(s, i);
-		return (false);
-	}
 	else
 	{
 		k = ft_strlen(*dst);
@@ -103,5 +100,4 @@ bool	expand_single(char *s, int *i, char **dst)
 			(*dst)[k++] = s[(*i)++];
 		(*dst)[k] = '\0';
 	}
-	return (true);
 }
