@@ -6,29 +6,29 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:20:08 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 02:45:42 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 14:42:51 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*double_quote_helper(char *s, int *i, char *temp, char *command)
+char	*double_quote_helper(char *s, int *i, char *command)
 {
 	int	j;
 
 	j = 0;
 	while (s[*i] != '"')
 	{
+		if (s[*i] == '\0')
+			return (free(command), print_error("minishell", "command",
+					"unclosed double quote"), NULL);
 		if (s[*i] == '$')
 		{
-			temp = dollar(s, i);
-			command = ft_strjoin(command, temp);
+			command[j] = '\0';
+			command = strjoin_free(command, dollar(s, i));
 			j = ft_strlen(command);
-		}
-		else if (s[*i] == '\0')
-		{
-			print_error("minishell", "command", "unclosed double quote");
-			return (NULL);
+			command = strjoin_free(command, ft_strdup(s));
+			command[j] = '\0';
 		}
 		else
 			command[j++] = s[(*i)++];
@@ -39,16 +39,13 @@ char	*double_quote_helper(char *s, int *i, char *temp, char *command)
 
 char	*double_quote(char *s, int *i)
 {
-	int		j;
 	char	*command;
-	char	*temp;
 
-	j = 0;
 	command = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
 	command[0] = '\0';
 	(*i)++;
-	command = double_quote_helper(s, i, temp, command);
-	if (s[*i] != '\0')
+	command = double_quote_helper(s, i, command);
+	if (s[*i] == '"')
 		(*i)++;
 	return (command);
 }
@@ -59,14 +56,14 @@ char	*quote(char *s, int *i)
 	char	*command;
 
 	j = 0;
-	command = (char *)malloc(ft_strlen(s) * sizeof(char));
+	command = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
 	(*i)++;
 	while (s[*i] != '\'')
 	{
 		if (s[*i] == '\0')
 		{
 			print_error("minishell", "command", "unclosed quote");
-			return (NULL);
+			return (free(command), NULL);
 		}
 		command[j++] = s[(*i)++];
 	}
