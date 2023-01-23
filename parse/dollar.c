@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:21:48 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:21:49 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 14:19:19 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*handle_env_substr(const char *env_var, char *command)
 {
 	char	*new;
 
-	new = ft_strdup(ft_substr(env_var, ft_strlen(command), ft_strlen(env_var)));
+	new = ft_substr(env_var, ft_strlen(command), ft_strlen(env_var));
 	free(command);
 	return (new);
 }
@@ -52,5 +52,5 @@ char	*dollar(char *s, int *i)
 	while (++j < ft_str2len(g_x->export))
 		if (ft_strnstr(g_x->export[j], command, ft_strlen(command)) != 0)
 			return (handle_env_substr(g_x->export[j], command));
-	return (ft_strdup(""));
+	return (free(command), ft_strdup(""));
 }
