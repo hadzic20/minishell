@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:22:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 15:11:55 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 15:38:11 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	handle_line(char *str)
 	int	status;
 	int	pid;
 
-	if (g_x->cmd_count == 0)
-		return ;
 	status = 0;
 	seperate_command(str);
 	if (g_x->cmd_count == 1)
