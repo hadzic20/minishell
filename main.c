@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:57:16 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 15:49:31 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 16:54:20 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,36 +66,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 
-	g_x = malloc(sizeof(t_x));
+	g_x = ft_calloc(1, sizeof(t_x));
 	g_x->export = storage_and_copy(envp);
 	g_x->export = export_sorter(g_x->export);
-	g_x->error_code = 0;
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, SIG_IGN);
-	// testextract("> $? $? ahmet  1   2");
-	// testextract("1   2\"\"\"\"> ahmet<asd >sad <bas>>asd <<adsf >>>omg42 3 4");
-	// testextract("  >ahmet");
-	// testextract("  >ahmet 1");
-	// testextract("1 2 >ahmet r <<$$ >$USER 3 4 5");
-	// testextract("  >ahmet $USERmehmet");
-	// testextract("  >ahmet $USER\"ahmet\"");
-	// testextract("  >ahmet $USER\"whatt?? $USER\"");
-	// testextract("  >ahmet <heyo $USER\"whatt?? $USER\" > dostum");
-	// testextract("\"$USER%omg\"");
-	// testextract("asd>");
-	// testextract("<");
-	// testextract("< asd");
-	// testextract("  <");
-	// testextract("<<<<<<");
-	// testextract("<><><>");
-	// return (0);
-	// testextract("bwu$$h$USER%omg$$U$SE'$R$%as$d$$U$SER$'$a$'$ > 'dostum <najs || '");
-	// testextract("bwu>$$h$USER%o mg$$U$SE ' $R$%as$d$$U$SER$'$a$'$ > 'dostum <najs || '");
-	// testextract("bwu$$?h$USER% omg$$U $ SE'$R$%as$d$$U_)(*&^%$#@!$SER$'$a$'$ > 'dostum <najs || '");
-	// testextract("bwu$$h$U<SER% omg$ $U$SE'$R$%as$d$$U$SER$'$a$'$ > 'dostum <najs || '");
-	// testextract("bwu$$h$ USER>%omg$$U$SE'$R$%as$d$$U$SER$'$a$'$ > 'dostum <najs || '");
-	// testextract("echo >alskdjasd $USER lkJAS DL KASD L");
-	// return (0);
 	while (argc && argv)
 	{
 		get_prompt();

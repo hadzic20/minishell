@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:09:00 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 16:25:04 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 16:50:08 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ bool	redirect(t_command *cmd)
 	{
 		if (cmd->raw_command[i] == '\"' || cmd->raw_command[i] == '\'')
 			skip_quote(cmd->raw_command, &i);
-		if (cmd->raw_command[i] == '\0')
-			return (true);
 		if (cmd->raw_command[i] == '>' && cmd->raw_command[i + 1] == '>')
 			cmd->outfile = redirect_output(cmd->raw_command, &i, true);
 		else if (cmd->raw_command[i] == '>')
