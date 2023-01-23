@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:09:00 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/22 20:09:25 by amillahadzi      ###   ########.fr       */
+/*   Updated: 2023/01/23 14:07:37 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,15 @@ void	redirect(int cmd_index)
 	}
 }
 
-char	*redirect_path(char *s, int *i)
-{
-	char	*final;
-
-	final = ft_strdup("");
-	while (s[*i] != '\0')
-	{
-		skip_spaces(s, i);
-		if (s[*i] == '\0')
-			return (NULL);
-		if (!expand_single(s, i, &final))
-			continue ;
-		if (ft_isspace(s[*i]) || s[*i] == '\0')
-			break ;
-	}
-	return (final);
-}
-
 int	redirect_input(char *str, int *i)
 {
 	char	*path;
 	int		file;
 
 	(*i) += 1;
-	path = redirect_path(str, i);
+	path = expand_redirect(str, i);
+	if (!path)
+		return (-1);
 	file = open(path, O_RDONLY, 0777);
 	if (file == -1)
 	{
@@ -85,7 +69,9 @@ int	redirect_output(char *str, int *i, bool is_append)
 		(*i) += 2;
 	else
 		(*i) += 1;
-	path = redirect_path(str, i);
+	path = expand_redirect(str, i);
+	if (!path)
+		return (-1);
 	if (is_append)
 		file = open(path, O_CREAT | O_RDWR | O_APPEND, 0777);
 	else
