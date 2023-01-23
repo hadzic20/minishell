@@ -6,7 +6,7 @@
 /*   By: amillahadzic <amillahadzic@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:23:04 by amillahadzi       #+#    #+#             */
-/*   Updated: 2023/01/23 15:08:06 by ykimirti         ###   ########.tr       */
+/*   Updated: 2023/01/23 15:49:44 by ykimirti         ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	seperate_command(char *s)
 	current_quote = '\0';
 	i = -1;
 	j = 0;
-	g_x->cmds = malloc((g_x->cmd_count) * sizeof(t_command));
+	g_x->cmds = ft_calloc(g_x->cmd_count, sizeof(t_command));
 	while (++i < g_x->cmd_count)
 		g_x->cmds[i].raw_command = ft_calloc((ft_strlen(s) + 1), sizeof(char));
 	i = 0;
@@ -155,6 +155,8 @@ void	handle_command_execution(int i, bool is_in_fork)
 {
 	g_x->cmds[i].handled_cmd = extract_command(g_x->cmds[i].raw_command);
 	g_x->error_code = 0;
+	if (g_x->cmds[i].handled_cmd[0] == NULL)
+		return ;
 	handle_command(g_x->cmds[i].handled_cmd, g_x->cmds[i].outfile,
 		g_x->cmds[i].infile, is_in_fork);
 }
