@@ -63,6 +63,9 @@ clean:
 	$(RM) */*.o
 	$(RM) *.o
 
+norm:
+	norminette builtin/ parse/ prompt/ redirect/ utils/ main.c 
+
 fclean: clean
 	rm -rf libft.a
 	$(RM) $(NAME)
@@ -73,4 +76,4 @@ ffclean: fclean
 
 re: fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:		all clean fclean re norm
